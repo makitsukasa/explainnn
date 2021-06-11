@@ -1,5 +1,5 @@
 #include <iostream>
-#include "ind.h"
+#include "wann/ind.h"
 
 int main()
 {

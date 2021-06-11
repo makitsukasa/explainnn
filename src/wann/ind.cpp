@@ -1,4 +1,4 @@
-#include "ind.h"
+#include "wann/ind.h"
 
 enn::Ind::Ind(double fitness_)
 {

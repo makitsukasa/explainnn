@@ -1,56 +1,153 @@
-# http://urin.github.io/posts/2013/simple-makefile-for-clang
+#!/usr/bin/make
+###
+# Makefile
+# https://qiita.com/rimria/items/c3f9455b53d77916e6a1
+###
 
-# sampleproject
-#   |-- makefile
-#   |-- bin
-#   |   `-- sampleproject  <- 生成される実行ファイル (TARGET)
-#   |-- incl
-#   |   `-- main.h
-#   |-- obj                <- 生成される中間ファイル生成先ディレクトリ (OBJDIR)
-#   |   |-- main.d         <- 生成される依存関係ファイル (DEPENDS)
-#   |   `-- main.o         <- 生成されるオブジェクトファイル (OBJECTS)
-#   `-- src
-#       `-- main.cpp
+###
+# コンパイラ設定
+###
+CXX        = g++
+CXXFLAGS   = -std=c++0x -Werror -Wall -Wextra -Wfloat-equal
+LDFLAGS    =
+LIBS       =
+INCLUDES   = -I./incl
+RCXXFLAGS  = $(CXXFLAGS) -O3
+RLDFLAGS   = $(LDFLAGS)
+RLIBS      = $(LIBS)
+RINCLUDES  = $(INCLUDES)
+DCXXFLAGS  = $(CXXFLAGS) -O0 -g
+DLDFLAGS   = $(LDFLAGS)
+DLIBS      = $(LIBS)
+DINCLUDES  = $(INCLUDES)
+TCXXFLAGS  = $(CXXFLAGS)
+TLDFLAGS   = $(LDFLAGS) -lCppUTest -lCppUTestExt
+TLIBS      = $(LIBS) -L./test_lib/CppUTest -L./test_lib/CppUTestExt
+TINCLUDES  = $(INCLUDES) -I./test_incl
 
-CXX       = g++
-CXXFLAGS  = -g -MMD -MP -Wall -Wextra -Winit-self -Wno-missing-field-initializers
-ifeq "$(shell getconf LONG_BIT)" "64"
-    LDFLAGS   =
-else
-    LDFLAGS   =
-endif
-LIBS      =
-INCLUDE   = -I./incl
-TARGET    = ./bin/$(shell basename `readlink -f .`)
-SRCDIR    = ./src
-ifeq "$(strip $(SRCDIR))" ""
-    SRCDIR    = .
-endif
-SOURCES   = $(wildcard $(SRCDIR)/*.cpp)
-OBJDIR    = ./obj
-ifeq "$(strip $(OBJDIR))" ""
-    OBJDIR    = .
-endif
-OBJECTS   = $(addprefix $(OBJDIR)/, $(notdir $(SOURCES:.cpp=.o)))
-DEPENDS   = $(OBJECTS:.o=.d)
+###
+# 実行ファイル名
+###
+RTARGET   = explainnn
+DTARGET   = debug_explainnn
+TTARGET   = test_explainnn
 
-$(TARGET): $(OBJECTS) $(LIBS)
-	@echo \(makefile\) compile $@
-	@$(CXX) -o $@ $^ $(LDFLAGS)
+###
+# ディレクトリ指定
+###
+RTARGETDIR = ./bin/release
+DTARGETDIR = ./bin/debug
+TTARGETDIR = ./bin/test
+ROBJECTDIR = ./obj/release
+DOBJECTDIR = ./obj/debug
+TOBJECTDIR = ./obj/test
+TLOGDIR    = ./test_log
 
-$(OBJDIR)/%.o: $(SRCDIR)/%.cpp
-	@echo \(makefile\) compile $<
-	-@mkdir -p $(OBJDIR)
-	@$(CXX) $(CXXFLAGS) $(INCLUDE) -o $@ -c $<
+###
+# ソースコードディレクトリ指定
+###
+SOURCEDIR     = ./src
+TSOURCEDIR    = ./test_src
 
-all: clean $(TARGET)
+###
+# テスト用除外ソース指定
+###
+TARGETMAINSRC = hoge.cpp
 
-run: $(TARGET)
-	@echo \(makefile\) run bin/$(shell basename `readlink -f .`)
-	@bin/$(shell basename `readlink -f .`)
+###
+# 処理部
+###
+# 1. サブディレクトリを含むディレクトリリストの生成
+SRCDIRLIST  := $(shell find $(SOURCEDIR) -type d)
+TSRCDIRLIST := $(shell find $(TSOURCEDIR) -type d)
+# 2. 全てのcppファイルのリストの生成
+SRCLIST     = $(foreach srcdir, $(SRCDIRLIST), $(wildcard $(srcdir)/*.cpp))
+TSRCLIST    = $(foreach testsrcdir, $(TSRCDIRLIST), $(wildcard $(testsrcdir)/*.cpp))
+# 3. トリミング
+CUTSRCLIST  = $(subst $(SOURCEDIR),.,$(SRCLIST))
+CUTTSRCLIST = $(subst $(TSOURCEDIR),.,$(TSRCLIST))
+# 4. オブジェクトファイル名の決定
+ROBJLIST    = $(addprefix $(ROBJECTDIR)/, $(CUTSRCLIST:.cpp=.o))
+DOBJLIST    = $(addprefix $(DOBJECTDIR)/, $(CUTSRCLIST:.cpp=.o))
+TOBJLIST    = $(addprefix $(TOBJECTDIR)/, $(CUTTSRCLIST:.cpp=.o))
+# 5. テスト用にmainを含むファイルの除外
+TEMPSRCLIST = $(filter-out %$(TARGETMAINSRC), $(CUTSRCLIST))
+TMODULELIST = $(addprefix $(DOBJECTDIR)/, $(TEMPSRCLIST:.cpp=.o))
+# 6. ディレクトリ構造のリスト化
+ROBJDIRLIST = $(addprefix $(ROBJECTDIR)/, $(SRCDIRLIST))
+DOBJDIRLIST = $(addprefix $(DOBJECTDIR)/, $(SRCDIRLIST))
+TOBJDIRLIST = $(addprefix $(TOBJECTDIR)/, $(TSRCDIRLIST))
+
+# 7. 各種ビルドターゲット設定
+.PHONY: all build run clean debugbuild debugclean testbuild testclean testrun testlog allbuild allclean
+all: allclean allbuild
+
+build: $(RTARGET)
+
+run: $(RTARGET)
+	@echo \(makefile\) run $(RTARGETDIR)/$(RTARGET)
+	@$(RTARGETDIR)/$(RTARGET)
 
 clean:
 	@echo \(makefile\) clean
-	-@rm -f $(OBJECTS) $(DEPENDS) $(TARGET)
+	@rm -f $(ROBJLIST) $(RTARGETDIR)/$(RTARGET)
 
--include $(DEPENDS)
+debugbuild: $(DTARGET)
+
+debugclean:
+	@echo \(makefile\) debugclean
+	@rm -f $(DOBJLIST) $(DTARGETDIR)/$(DTARGET)
+
+testbuild: $(DTARGET) $(TTARGET)
+
+testclean:
+	@echo \(makefile\) testclean
+	@rm -f $(TOBJLIST) $(DOBJLIST) $(TTARGETDIR)/$(TTARGET)
+
+testrun: testclean testbuild
+	@echo \(makefile\) testrun
+	@chmod +x $(TTARGETDIR)/$(TTARGET)
+	@$(TTARGETDIR)/$(TTARGET) -v
+
+testlog: testclean testbuild
+	@echo \(makefile\) testlog
+	@chmod +x $(TTARGETDIR)/$(TTARGET)
+	@$(TTARGETDIR)/$(TTARGET) -ojunit
+	@if [ ! -e $(TLOGDIR) ]; then mkdir -p $(TLOGDIR); fi
+	@mv *.xml $(TLOGDIR)
+
+allbuild: build debugbuild testbuild
+
+allclean: clean debugclean testclean
+
+# 8. ターゲット実行ファイルの生成
+$(RTARGET): $(ROBJLIST)
+	@echo \(makefile\) compile $(RTARGETDIR)/$(RTARGET)
+	@if [ ! -e $(RTARGETDIR) ]; then mkdir -p $(RTARGETDIR); fi
+	@$(CXX) -o $(RTARGETDIR)/$@ $^ $(RLDFLAGS) $(RLIBS)
+
+$(DTARGET): $(DOBJLIST)
+	@echo \(makefile\) compile $(DTARGETDIR)/$(DTARGET)
+	@if [ ! -e $(DTARGETDIR) ]; then mkdir -p $(DTARGETDIR); fi
+	@$(CXX) -o $(DTARGETDIR)/$@ $^ $(DLDFLAGS) $(DLIBS)
+
+$(TTARGET): $(TOBJLIST)
+	@echo \(makefile\) compile $(TTARGETDIR)/$(TTARGET)
+	@if [ ! -e $(TTARGETDIR) ]; then mkdir -p $(TTARGETDIR); fi
+	@$(CXX) -o $(TTARGETDIR)/$@ $^ $(TMODULELIST) $(TLDFLAGS) $(TLIBS)
+
+# 9. 中間バイナリの生成
+$(ROBJECTDIR)/%.o: $(SOURCEDIR)/%.cpp
+	@echo \(makefile\) compile $@
+	@if [ ! -e `dirname $@` ]; then mkdir -p `dirname $@`; fi
+	@$(CXX) $(RCXXFLAGS) $(RINCLUDES) -o $@ -c $<
+
+$(DOBJECTDIR)/%.o: $(SOURCEDIR)/%.cpp
+	@echo \(makefile\) compile $@
+	@if [ ! -e `dirname $@` ]; then mkdir -p `dirname $@`; fi
+	@$(CXX) $(DCXXFLAGS) $(DINCLUDES) -o $@ -c $<
+
+$(TOBJECTDIR)/%.o: $(TSOURCEDIR)/%.cpp
+	@echo \(makefile\) compile $@
+	@if [ ! -e `dirname $@` ]; then mkdir -p `dirname $@`; fi
+	@$(CXX) $(TCXXFLAGS) $(TINCLUDES) -o $@ -c $<
