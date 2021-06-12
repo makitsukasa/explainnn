@@ -7,7 +7,7 @@
 ###
 # コンパイラ設定
 ###
-CXX        = g++
+CXX        = /usr/bin/g++
 CXXFLAGS   = -std=c++0x -Werror -Wall -Wextra -Wfloat-equal
 LDFLAGS    =
 LIBS       =
