@@ -1,35 +1,42 @@
 #pragma once
 
 namespace enn {
-	enum class NodeType {
-		Input,
-		Output,
-		Hidden,
-		Bias,
-	};
+enum class node_type {
+	Input,
+	Output,
+	Hidden,
+	Bias,
+};
 
-	enum class ActivationFunction {
-		Linear,
-		UnsignedStep,
-		Sine,
-		Gausian,
-		HyperbolicTangent,
-		UnsignedSigmoid,
-		Inverse,
-		Absolute,
-		Relu,
-		Cosine,
-		Squared,
-	};
+enum class activation_function {
+	Linear,
+	UnsignedStep,
+	Sine,
+	Gausian,
+	HyperbolicTangent,
+	UnsignedSigmoid,
+	Inverse,
+	Absolute,
+	Relu,
+	Cosine,
+	Squared,
+};
 
-	class Node {
-	private:
-		static int lastId;
-		int id;
-		NodeType nodeType;
-		ActivationFunction actFunc;
+class node {
+private:
+	int id;
+	node_type type;
+	activation_function act_func;
 
-	public:
-		Node(NodeType nodeType = NodeType::Hidden, ActivationFunction actFunc = ActivationFunction::Linear);
-	};
-}
+public:
+	double input;
+	double output;
+
+	node(
+		node_type type               = node_type::Hidden,
+		activation_function act_func = activation_function::Linear);
+	int get_id();
+	double calculate();
+};
+
+} // namespace enn

@@ -8,7 +8,7 @@
 # コンパイラ設定
 ###
 CXX        = /usr/bin/g++
-CXXFLAGS   = -std=c++0x -Werror -Wall -Wextra -Wfloat-equal
+CXXFLAGS   = -std=c++20 -Werror -Wall -Wextra -Wfloat-equal -Winit-self -Wno-missing-field-initializers -Wuninitialized
 LDFLAGS    =
 LIBS       =
 INCLUDES   = -I./incl
@@ -53,6 +53,11 @@ TSOURCEDIR    = ./test_src
 # テスト用除外ソース指定
 ###
 TARGETMAINSRC = hoge.cpp
+
+###
+# 他設定
+###
+.DEFAULT_GOAL := run
 
 ###
 # 処理部
