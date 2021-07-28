@@ -27,17 +27,21 @@ enn::individual::individual(unsigned long num_input, unsigned long num_output)
 	unsigned long size = num_input + 1 + num_output;
 	adjacency_matrix.assign(size, std::vector<edge *>(size, nullptr));
 
+	// input node
 	for (unsigned long i = 0; i < num_input; i++) {
 		add_node(node_type::Input);
 	}
+	// bias node
 	add_node(node_type::Bias);
+	// output node
 	for (unsigned long i = 0; i < num_output; i++) {
 		add_node(node_type::Output);
 	}
 
+	// (input, bias)とoutputの間を全部繋ぐ
 	for (unsigned long i = 0; i < num_input + 1; i++) {
 		for (unsigned long j = num_input + 1; j < size; j++) {
-			add_edge(i, j, new edge(0.5));
+			add_edge(i, j, new edge());
 		}
 	}
 }
