@@ -1,18 +1,18 @@
-#include "../../incl/wann/edge.h"
+#include "wann/edge.h"
+#include "lib/randomlib.h"
 
 double enn::edge::sharedWeight = 1.0;
-std::random_device seed_gen;
-std::mt19937 enn::edge::random_engine(seed_gen());
-std::uniform_real_distribution<double> random_distribution(0.0, 1.0);
 
 enn::edge::edge() {
 	weight = random_distribution(random_engine);
+	std::cout << &random_engine << std::endl;
 }
 
 enn::edge::edge(double weight) : weight(weight) {}
 
 double enn::edge::calculate(double input) {
-	return input * weight;
+	// return input * weight;
+	return input;
 }
 
 double enn::edge::calculateWithSharedWeight(double input) {

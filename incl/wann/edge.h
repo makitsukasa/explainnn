@@ -6,12 +6,11 @@
 namespace enn {
 class edge {
 private:
+public:
 	static double sharedWeight;
-	static std::mt19937 random_engine;
 	double weight;
 	bool enabled;
 
-public:
 	edge();
 	edge(double weight);
 	friend std::ostream &operator<<(std::ostream &os, const edge &edge);
