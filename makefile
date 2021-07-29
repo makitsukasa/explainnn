@@ -2,6 +2,8 @@
 ###
 # Makefile
 # https://qiita.com/rimria/items/c3f9455b53d77916e6a1
+# gtest
+# https://next49.hatenadiary.jp/entry/20120821/p1
 ###
 
 ###
@@ -10,7 +12,7 @@
 CXX        = /usr/bin/g++
 CXXFLAGS   = -std=c++20 -Werror -Wall -Wextra -Wfloat-equal -Winit-self -Wno-missing-field-initializers -Wuninitialized
 LDFLAGS    =
-LIBS       =
+LIBS       = -lpthread
 INCLUDES   = -I./incl
 RCXXFLAGS  = $(CXXFLAGS) -O3
 RLDFLAGS   = $(LDFLAGS)
@@ -21,9 +23,9 @@ DLDFLAGS   = $(LDFLAGS)
 DLIBS      = $(LIBS)
 DINCLUDES  = $(INCLUDES)
 TCXXFLAGS  = $(CXXFLAGS)
-TLDFLAGS   = $(LDFLAGS) -lCppUTest -lCppUTestExt
-TLIBS      = $(LIBS) -L./test_lib/CppUTest -L./test_lib/CppUTestExt
-TINCLUDES  = $(INCLUDES) -I./test_incl
+TLDFLAGS   = $(LDFLAGS)
+TLIBS      = $(LIBS) /usr/local/lib/libgtest.a /usr/local/lib/libgtest_main.a
+TINCLUDES  = $(INCLUDES)
 
 ###
 # 実行ファイル名
@@ -52,7 +54,7 @@ TSOURCEDIR    = ./test_src
 ###
 # テスト用除外ソース指定
 ###
-TARGETMAINSRC = hoge.cpp
+TARGETMAINSRC = main.cpp
 
 ###
 # 他設定
@@ -109,7 +111,7 @@ testclean:
 	@echo \(makefile\) testclean
 	@rm -f $(TOBJLIST) $(DOBJLIST) $(TTARGETDIR)/$(TTARGET)
 
-testrun: testclean testbuild
+testrun: testbuild
 	@echo \(makefile\) testrun
 	@chmod +x $(TTARGETDIR)/$(TTARGET)
 	@$(TTARGETDIR)/$(TTARGET) -v

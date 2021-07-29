@@ -102,56 +102,24 @@ void enn::individual::add_edge(unsigned long source_id, unsigned long destinatio
 }
 
 std::vector<double> enn::individual::calculate(std::vector<double> input) {
-
-	for (unsigned long i = 0; i < node_order.size(); i++) {
-		std::cout << node_order[i] << ",";
-	}
-	std::cout << std::endl;
-
 	// 入力層のノードにinputを代入
 	for (unsigned long i = 0; i < num_input; i++) {
 		nodes[node_order[i]].input = input[i];
 	}
-
 	// バイアスノードの入力は1を代入
 	nodes[node_order[num_input]].input = 1.0;
-
 	// 出力層のノードには一旦0を代入し、下で加算していく
 	for (unsigned long i = num_input + 1; i < num_input + 1 + num_output; i++) {
 		nodes[node_order[i]].input = 0.0;
 	}
 
-	for (unsigned long i = 0; i < node_order.size(); i++) {
-		std::cout << nodes[node_order[i]].input << ",";
-	}
-	std::cout << std::endl;
-	std::cout << std::endl;
-
 	// 計算
 	for (unsigned long i = 0; i < nodes.size(); i++) {
-		for (unsigned long j = 0; j < nodes.size(); j++)
-			std::cout << nodes[node_order[j]].input << ",";
-		std::cout << std::endl;
-		for (unsigned long j = 0; j < nodes.size(); j++)
-			std::cout << nodes[node_order[j]].output << ",";
-		std::cout << std::endl;
-
 		auto output = nodes[node_order[i]].calculate();
-
-		std::cout << output << std::endl;
-
 		for (unsigned long j = i; j < nodes.size(); j++) {
 			if (adjacency_matrix[i][j] == nullptr) continue;
 			nodes[node_order[j]].input += adjacency_matrix[i][j]->calculate(output);
 		}
-
-		for (unsigned long j = 0; j < nodes.size(); j++)
-			std::cout << nodes[node_order[j]].input << ",";
-		std::cout << std::endl;
-		for (unsigned long j = 0; j < nodes.size(); j++)
-			std::cout << nodes[node_order[j]].output << ",";
-		std::cout << std::endl;
-		std::cout << std::endl;
 	}
 
 	// 返り値

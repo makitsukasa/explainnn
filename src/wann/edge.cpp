@@ -5,7 +5,6 @@ double enn::edge::sharedWeight = 1.0;
 
 enn::edge::edge() {
 	weight = random_distribution(random_engine);
-	std::cout << &random_engine << std::endl;
 }
 
 enn::edge::edge(double weight) : weight(weight) {}
