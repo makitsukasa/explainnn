@@ -10,8 +10,7 @@ enn::edge::edge() {
 enn::edge::edge(double weight) : weight(weight) {}
 
 double enn::edge::calculate(double input) {
-	// return input * weight;
-	return input;
+	return input * weight;
 }
 
 double enn::edge::calculateWithSharedWeight(double input) {

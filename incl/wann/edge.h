@@ -5,12 +5,14 @@
 
 namespace enn {
 class edge {
+	friend class testEdge;
+
 private:
-public:
 	static double sharedWeight;
 	double weight;
 	bool enabled;
 
+public:
 	edge();
 	edge(double weight);
 	friend std::ostream &operator<<(std::ostream &os, const edge &edge);
