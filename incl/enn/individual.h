@@ -1,6 +1,7 @@
 #pragma once
 
 #include "edge.h"
+#include "lib/inverse.h"
 #include "node.h"
 #include <climits>
 #include <iostream>
