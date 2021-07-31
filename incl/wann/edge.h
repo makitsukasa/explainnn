@@ -5,7 +5,7 @@
 
 namespace enn {
 class edge {
-	friend class testEdge;
+	friend class test_edge;
 
 private:
 	static double sharedWeight;

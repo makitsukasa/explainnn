@@ -9,6 +9,8 @@
 
 namespace enn {
 class individual {
+	friend class test_individual;
+
 private:
 	// 値はnode、キーはそのnodeの.id
 	std::unordered_map<unsigned long, node> nodes;
