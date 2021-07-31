@@ -1,5 +1,5 @@
-#include "../incl/enn/individual.h"
-#include "../incl/lib/randomlib.h"
+#include "enn/individual.h"
+#include "lib/randomlib.h"
 #include <gtest/gtest.h>
 
 namespace enn {

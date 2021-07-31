@@ -1,5 +1,5 @@
-#include "../incl/wann/edge.h"
-#include "../incl/lib/randomlib.h"
+#include "enn/edge.h"
+#include "lib/randomlib.h"
 #include <gtest/gtest.h>
 
 namespace enn {
