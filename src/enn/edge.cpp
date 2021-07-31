@@ -1,4 +1,4 @@
-#include "wann/edge.h"
+#include "enn/edge.h"
 #include "lib/randomlib.h"
 
 double enn::edge::sharedWeight = 1.0;

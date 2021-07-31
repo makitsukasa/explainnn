@@ -1,4 +1,4 @@
-#include "wann/individual.h"
+#include "enn/individual.h"
 #include <algorithm>
 #include <iomanip>
 #include <iostream>

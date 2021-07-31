@@ -1,4 +1,4 @@
-#include "../incl/wann/individual.h"
+#include "../incl/enn/individual.h"
 #include "../incl/lib/randomlib.h"
 #include <gtest/gtest.h>
 
