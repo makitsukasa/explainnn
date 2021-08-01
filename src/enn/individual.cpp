@@ -60,7 +60,7 @@ void enn::individual::add_node(
 	} else {
 		// ソートが要らない、node_id_order[source_id]の後ろに挿入すればいい
 		auto index = node_id_order[source_id];
-		add_node(node_type::Hidden, index);
+		add_node(node_type::Hidden, index + 1);
 
 		// ノードが増えたのでnode_id_orderを再計算
 		node_id_order = inverse_vector(node_order);
