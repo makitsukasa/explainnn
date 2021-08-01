@@ -31,7 +31,6 @@ std::vector<unsigned long> topo_sort(std::vector<std::vector<bool>> matrix) {
 	// setが空になるまで
 	std::vector<unsigned long> ans = {};
 	while (!set.empty()) {
-		std::cout << set.size() << std::endl;
 		auto node = *set.begin();
 		set.erase(set.begin());
 		ans.push_back(node);

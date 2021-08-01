@@ -18,12 +18,8 @@ TEST(topo_sort_tester, two_reverse) {
 		{false, false},
 		{true, false},
 	};
-	try {
-		auto actual   = topo_sort(matrix);
-		auto expected = std::vector<unsigned long>{1, 0};
+	auto actual   = topo_sort(matrix);
+	auto expected = std::vector<unsigned long>{1, 0};
 
-		ASSERT_EQ(expected.size(), actual.size()) << "Vectors are of unequal length";
-	} catch (std::exception const &err) {
-		FAIL() << err.what();
-	}
+	ASSERT_EQ(expected.size(), actual.size()) << "Vectors are of unequal length";
 }
