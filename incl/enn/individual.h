@@ -10,7 +10,7 @@
 
 namespace enn {
 class individual {
-	friend class test_individual;
+	friend class individual_tester;
 
 private:
 	// 値はnode、キーはそのnodeの.id

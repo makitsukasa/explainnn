@@ -52,9 +52,21 @@ void enn::individual::add_node(
 	auto new_node_id   = nodes.size();
 	auto node_id_order = inverse_vector(node_order);
 
+	// 明らかに不適な操作は弾く
 	if (source_id == destination_id) {
 		throw "source_id == destination_id in individual::add_node()";
-	} else if (node_id_order[source_id] > node_id_order[destination_id]) {
+	}
+	if (nodes[source_id].get_type() == node_type::Output) {
+		throw "nodes[source_id] is output node in individual::add_node()";
+	}
+	if (nodes[destination_id].get_type() == node_type::Input) {
+		throw "nodes[destination_id] is input node in individual::add_node()";
+	}
+	if (nodes[destination_id].get_type() == node_type::Bias) {
+		throw "nodes[destination_id] is bias node in individual::add_node()";
+	}
+
+	if (node_id_order[source_id] > node_id_order[destination_id]) {
 		// ソートが要る
 		throw "Not implemented";
 	} else {

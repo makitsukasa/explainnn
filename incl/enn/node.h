@@ -40,6 +40,7 @@ public:
 		node_type type               = node_type::Hidden,
 		activation_function act_func = activation_function::Linear);
 	int get_id();
+	node_type get_type();
 	double calculate();
 };
 
