@@ -161,20 +161,20 @@ TEST(individual_tester, add_node_between_hiddens) {
 	}
 }
 
-TEST(individual_tester, add_node_between_hiddens_sort) {
-	enn::random_engine = std::mt19937(6700417);
-	auto ind           = enn::individual(3, 2);
+// TEST(individual_tester, add_node_between_hiddens_sort) {
+// 	enn::random_engine = std::mt19937(6700417);
+// 	auto ind           = enn::individual(3, 2);
 
-	ind.add_node(0, 4, new enn::edge(0.1), new enn::edge(0.1));
-	ind.add_node(1, 5, new enn::edge(0.1), new enn::edge(0.1));
+// 	ind.add_node(0, 4, new enn::edge(0.1), new enn::edge(0.1));
+// 	ind.add_node(1, 5, new enn::edge(0.1), new enn::edge(0.1));
 
-	ind.add_node(6, 7, new enn::edge(0.1), new enn::edge(0.1));
+// 	ind.add_node(6, 7, new enn::edge(0.1), new enn::edge(0.1));
 
-	auto actual_order = ind.get_node_order();
-	std::vector<unsigned long> expect_order{0, 1, 2, 3, 6, 8, 7, 4, 5};
-	ASSERT_EQ(expect_order.size(), actual_order.size()) << "Vectors are of unequal length";
-	for (unsigned long i = 0; i < expect_order.size(); i++) {
-		EXPECT_FLOAT_EQ(expect_order[i], actual_order[i]) << "Vectors differ at index " << i;
-	}
-}
+// 	auto actual_order = ind.get_node_order();
+// 	std::vector<unsigned long> expect_order{0, 1, 2, 3, 6, 8, 7, 4, 5};
+// 	ASSERT_EQ(expect_order.size(), actual_order.size()) << "Vectors are of unequal length";
+// 	for (unsigned long i = 0; i < expect_order.size(); i++) {
+// 		EXPECT_FLOAT_EQ(expect_order[i], actual_order[i]) << "Vectors differ at index " << i;
+// 	}
+// }
 } // namespace enn
