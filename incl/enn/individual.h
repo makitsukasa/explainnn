@@ -21,6 +21,7 @@ private:
 	std::vector<std::vector<edge *>> adjacency_matrix;
 	unsigned long num_input;
 	unsigned long num_output;
+	std::vector<std::vector<bool>> get_bool_matrix_hidden();
 
 public:
 	individual(unsigned long num_input, unsigned long num_output);

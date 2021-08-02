@@ -68,24 +68,24 @@ void enn::individual::add_node(
 	}
 
 	// *** 一旦node_id_order[source_id]の後ろに挿入 *** ここから
-		auto index = node_id_order[source_id];
-		add_node(node_type::Hidden, index + 1);
+	auto index = node_id_order[source_id];
+	add_node(node_type::Hidden, index + 1);
 
-		// ノードが増えたのでnode_id_orderを再計算
+	// ノードが増えたのでnode_id_orderを再計算
 	node_id_order = inverse::inverse_vector(node_order);
 
-		// 各rowに挿入
-		for (auto &row : adjacency_matrix) {
-			row.insert(row.begin() + node_id_order[new_node_id], nullptr);
-		}
-		// rowを挿入
-		adjacency_matrix.insert(
-			adjacency_matrix.begin() + node_id_order[new_node_id],
-			std::vector<edge *>(new_size, nullptr));
+	// 各rowに挿入
+	for (auto &row : adjacency_matrix) {
+		row.insert(row.begin() + node_id_order[new_node_id], nullptr);
+	}
+	// rowを挿入
+	adjacency_matrix.insert(
+		adjacency_matrix.begin() + node_id_order[new_node_id],
+		std::vector<edge *>(new_size, nullptr));
 
-		// edgeを代入
-		adjacency_matrix[node_id_order[source_id]][node_id_order[new_node_id]]      = edge1;
-		adjacency_matrix[node_id_order[new_node_id]][node_id_order[destination_id]] = edge2;
+	// edgeを代入
+	adjacency_matrix[node_id_order[source_id]][node_id_order[new_node_id]]      = edge1;
+	adjacency_matrix[node_id_order[new_node_id]][node_id_order[destination_id]] = edge2;
 
 	// *** 一旦node_id_order[source_id]の後ろに挿入 *** ここまで
 
@@ -129,6 +129,22 @@ std::vector<double> enn::individual::calculate(std::vector<double> input) {
 	auto ret = std::vector<double>(num_output);
 	for (unsigned long i = 0; i < num_output; i++) {
 		ret[i] = nodes[node_order[nodes.size() - num_output + i]].output;
+	}
+	return ret;
+}
+
+std::vector<std::vector<bool>> enn::individual::get_bool_matrix_hidden() {
+	std::vector<std::vector<bool>> ret = {};
+
+	// num_input + 1個目(hiddenの0個目)が0になるように下駄を脱がす
+	auto jack = num_input + 1;
+
+	for (unsigned long x = 0; x < nodes.size() - jack - num_output; x++) {
+		std::vector<bool> row;
+		for (unsigned long y = 0; y < nodes.size() - jack - num_output; y++) {
+			row.push_back(adjacency_matrix[x + jack][y + jack] == nullptr ? false : true);
+		}
+		ret.push_back(row);
 	}
 	return ret;
 }
