@@ -167,7 +167,7 @@ TEST(individual_tester, add_node_between_in_and_out) {
 	}
 }
 
-TEST(individual_tester, add_node_between_hiddens) {
+TEST(individual_tester, add_node_between_hiddens_as_is) {
 	enn::random_engine = std::mt19937(6700417);
 	auto ind           = enn::individual(3, 2);
 
@@ -273,6 +273,13 @@ TEST(individual_tester, add_node_between_hiddens_sort) {
 				}
 			}
 		}
+	}
+
+	auto actual_out = ind.calculate(std::vector<double>({0.1, 0.2, 0.3}));
+	std::vector<double> expect_out{0.39071396, 0.50444657};
+	ASSERT_EQ(expect_out.size(), actual_out.size()) << "Vectors are of unequal length";
+	for (unsigned long i = 0; i < expect_out.size(); i++) {
+		EXPECT_FLOAT_EQ(expect_out[i], actual_out[i]) << "Vectors differ at index " << i;
 	}
 }
 } // namespace enn
