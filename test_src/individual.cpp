@@ -79,13 +79,13 @@ TEST(individual_tester, add_node_between_in_and_out) {
 			if (expect_matrix[i][j]) {
 				if (actual_matrix[i][j] == nullptr) {
 					auto node_order    = ind.get_node_order();
-					auto node_id_order = inverse_vector(node_order);
+					auto node_id_order = inverse::inverse_vector(node_order);
 					FAIL() << "Matrices differ at index (" << i << "," << j << "), which is (#"
 						   << node_id_order[i] << ",#" << node_id_order[j] << ")";
 				}
 			} else {
 				auto node_order    = ind.get_node_order();
-				auto node_id_order = inverse_vector(node_order);
+				auto node_id_order = inverse::inverse_vector(node_order);
 				if (actual_matrix[i][j] != nullptr) {
 					FAIL() << "Matrices differ at index (" << i << "," << j << "), which is (#"
 						   << node_id_order[i] << ",#" << node_id_order[j] << ")";
@@ -138,13 +138,13 @@ TEST(individual_tester, add_node_between_hiddens) {
 			if (expect_matrix[i][j]) {
 				if (actual_matrix[i][j] == nullptr) {
 					auto node_order    = ind.get_node_order();
-					auto node_id_order = inverse_vector(node_order);
+					auto node_id_order = inverse::inverse_vector(node_order);
 					FAIL() << "Matrices differ at index (" << i << "," << j << "), which is ("
 						   << node_id_order[i] << "," << node_id_order[j] << ")";
 				}
 			} else {
 				auto node_order    = ind.get_node_order();
-				auto node_id_order = inverse_vector(node_order);
+				auto node_id_order = inverse::inverse_vector(node_order);
 				if (actual_matrix[i][j] != nullptr) {
 					FAIL() << "Matrices differ at index (" << i << "," << j << "), which is ("
 						   << node_id_order[i] << "," << node_id_order[j] << ")";

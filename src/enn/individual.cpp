@@ -1,4 +1,5 @@
 #include "enn/individual.h"
+#include "lib/toposort.h"
 #include <algorithm>
 #include <iomanip>
 #include <iostream>
@@ -50,7 +51,7 @@ void enn::individual::add_node(
 	unsigned long source_id, unsigned long destination_id, edge *edge1, edge *edge2) {
 	auto new_size      = nodes.size() + 1;
 	auto new_node_id   = nodes.size();
-	auto node_id_order = inverse_vector(node_order);
+	auto node_id_order = inverse::inverse_vector(node_order);
 
 	// 明らかに不適な操作は弾く
 	if (source_id == destination_id) {
@@ -66,16 +67,12 @@ void enn::individual::add_node(
 		throw "nodes[destination_id] is bias node in individual::add_node()";
 	}
 
-	if (node_id_order[source_id] > node_id_order[destination_id]) {
-		// ソートが要る
-		throw "Not implemented";
-	} else {
-		// ソートが要らない、node_id_order[source_id]の後ろに挿入すればいい
+	// *** 一旦node_id_order[source_id]の後ろに挿入 *** ここから
 		auto index = node_id_order[source_id];
 		add_node(node_type::Hidden, index + 1);
 
 		// ノードが増えたのでnode_id_orderを再計算
-		node_id_order = inverse_vector(node_order);
+	node_id_order = inverse::inverse_vector(node_order);
 
 		// 各rowに挿入
 		for (auto &row : adjacency_matrix) {
@@ -89,7 +86,18 @@ void enn::individual::add_node(
 		// edgeを代入
 		adjacency_matrix[node_id_order[source_id]][node_id_order[new_node_id]]      = edge1;
 		adjacency_matrix[node_id_order[new_node_id]][node_id_order[destination_id]] = edge2;
-	}
+
+	// *** 一旦node_id_order[source_id]の後ろに挿入 *** ここまで
+
+	// *** ソート *** ここから
+	// 隣接行列のうち入力も出力もhiddenである正方形の領域について
+	// bool型の配列を用意
+	std::vector<std::vector<bool>> matrix_bool;
+
+	// argsortっぽい感じ
+	auto indices = topo_sort(matrix_bool);
+
+	//
 }
 
 void enn::individual::add_edge(unsigned long source_id, unsigned long destination_id, edge *edge) {
@@ -103,8 +111,8 @@ std::vector<double> enn::individual::calculate(std::vector<double> input) {
 	}
 	// バイアスノードの入力は1を代入
 	nodes[node_order[num_input]].input = 1.0;
-	// 出力層のノードには一旦0を代入し、下で加算していく
-	for (unsigned long i = num_input + 1; i < num_input + 1 + num_output; i++) {
+	// 隠れ層、出力層のノードには一旦0を代入し、下で加算していく
+	for (unsigned long i = num_input + 1; i < nodes.size(); i++) {
 		nodes[node_order[i]].input = 0.0;
 	}
 
