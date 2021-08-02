@@ -92,12 +92,32 @@ void enn::individual::add_node(
 	// *** ソート *** ここから
 	// 隣接行列のうち入力も出力もhiddenである正方形の領域について
 	// bool型の配列を用意
-	std::vector<std::vector<bool>> matrix_bool;
+	auto matrix_bool = get_bool_matrix_hidden();
 
 	// argsortっぽい感じ
-	auto indices = topo_sort(matrix_bool);
+	auto sorted_indices = topo_sort(matrix_bool);
 
-	//
+	// node_orderを更新
+	auto old_node_order = std::vector<unsigned long>(node_order);
+	auto jack           = num_input + 1;
+	for (unsigned long i = 0; i < nodes.size() - jack - num_output; i++) {
+		node_order[i + jack] = old_node_order[sorted_indices[i] + jack];
+	}
+
+	// matrixを更新
+	auto new_node_id_order = inverse::inverse_vector(node_order);
+	std::vector<std::vector<edge *>> new_adjacency_matrix(
+		adjacency_matrix.size(), std::vector<edge *>(adjacency_matrix.size()));
+	for (unsigned long x = 0; x < nodes.size(); x++) {
+		for (unsigned long y = 0; y < nodes.size(); y++) {
+			auto x_new                         = new_node_id_order[old_node_order[x]];
+			auto y_new                         = new_node_id_order[old_node_order[y]];
+			new_adjacency_matrix[y_new][x_new] = adjacency_matrix[y][x];
+		}
+	}
+	adjacency_matrix = new_adjacency_matrix;
+
+	// *** ソート *** ここまで
 }
 
 void enn::individual::add_edge(unsigned long source_id, unsigned long destination_id, edge *edge) {

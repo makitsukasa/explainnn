@@ -87,7 +87,7 @@ TEST(individual_tester, get_bool_matrix_hidden_sort) {
 	ind.add_node(6, 7, new enn::edge(0.1), new enn::edge(0.1));
 
 	auto actual_order = ind.get_node_order();
-	std::vector<unsigned long> expect_order{0, 1, 2, 3, 7, 6, 8, 4, 5};
+	std::vector<unsigned long> expect_order{0, 1, 2, 3, 6, 8, 7, 4, 5};
 	ASSERT_EQ(actual_order.size(), expect_order.size()) << "Vectors are of unequal length";
 	for (unsigned long i = 0; i < expect_order.size(); i++) {
 		EXPECT_FLOAT_EQ(expect_order[i], actual_order[i]) << "Vectors differ at index " << i;
@@ -95,9 +95,9 @@ TEST(individual_tester, get_bool_matrix_hidden_sort) {
 
 	auto actual_matrix = individual_tester::get_bool_matrix_hidden(ind);
 	std::vector<std::vector<bool>> expect_matrix{
-		{false, false, false},
+		{false, true, false},
 		{false, false, true},
-		{true, false, false},
+		{false, false, false},
 	};
 
 	ASSERT_EQ(expect_matrix.size(), actual_matrix.size()) << "Vectors are of unequal length";
@@ -173,8 +173,7 @@ TEST(individual_tester, add_node_between_hiddens) {
 
 	ind.add_node(0, 4, new enn::edge(0.1), new enn::edge(0.1));
 	ind.add_node(1, 5, new enn::edge(0.1), new enn::edge(0.1));
-
-	ind.add_node(7, 6, new enn::edge(0.1), new enn::edge(0.1));
+	ind.add_node(7, 6, new enn::edge(0.1), new enn::edge(0.1)); // ソートは不要
 
 	auto actual_order = ind.get_node_order();
 	std::vector<unsigned long> expect_order{0, 1, 2, 3, 7, 8, 6, 4, 5};
@@ -226,20 +225,54 @@ TEST(individual_tester, add_node_between_hiddens) {
 	}
 }
 
-// TEST(individual_tester, add_node_between_hiddens_sort) {
-// 	enn::random_engine = std::mt19937(6700417);
-// 	auto ind           = enn::individual(3, 2);
+TEST(individual_tester, add_node_between_hiddens_sort) {
+	enn::random_engine = std::mt19937(6700417);
+	auto ind           = enn::individual(3, 2);
 
-// 	ind.add_node(0, 4, new enn::edge(0.1), new enn::edge(0.1));
-// 	ind.add_node(1, 5, new enn::edge(0.1), new enn::edge(0.1));
+	ind.add_node(0, 4, new enn::edge(0.1), new enn::edge(0.1));
+	ind.add_node(1, 5, new enn::edge(0.1), new enn::edge(0.1));
+	ind.add_node(6, 7, new enn::edge(0.1), new enn::edge(0.1)); // ソートが必要
 
-// 	ind.add_node(6, 7, new enn::edge(0.1), new enn::edge(0.1));
+	auto actual_order = ind.get_node_order();
+	std::vector<unsigned long> expect_order{0, 1, 2, 3, 6, 8, 7, 4, 5};
+	ASSERT_EQ(expect_order.size(), actual_order.size()) << "Vectors are of unequal length";
+	for (unsigned long i = 0; i < expect_order.size(); i++) {
+		EXPECT_FLOAT_EQ(expect_order[i], actual_order[i]) << "Vectors differ at index " << i;
+	}
 
-// 	auto actual_order = ind.get_node_order();
-// 	std::vector<unsigned long> expect_order{0, 1, 2, 3, 6, 8, 7, 4, 5};
-// 	ASSERT_EQ(expect_order.size(), actual_order.size()) << "Vectors are of unequal length";
-// 	for (unsigned long i = 0; i < expect_order.size(); i++) {
-// 		EXPECT_FLOAT_EQ(expect_order[i], actual_order[i]) << "Vectors differ at index " << i;
-// 	}
-// }
+	auto actual_matrix = individual_tester::get_matrix(ind);
+	std::vector<std::vector<bool>> expect_matrix{
+		{false, false, false, false, true, false, false, true, true},
+		{false, false, false, false, false, false, true, true, true},
+		{false, false, false, false, false, false, false, true, true},
+		{false, false, false, false, false, false, false, true, true},
+		{false, false, false, false, false, true, false, true, false},
+		{false, false, false, false, false, false, true, false, false},
+		{false, false, false, false, false, false, false, false, true},
+		{false, false, false, false, false, false, false, false, false},
+		{false, false, false, false, false, false, false, false, false},
+	};
+	ASSERT_EQ(expect_matrix.size(), actual_matrix.size()) << "Vectors are of unequal length";
+	for (unsigned long i = 0; i < expect_matrix.size(); i++) {
+		ASSERT_EQ(expect_matrix[i].size(), actual_matrix[i].size())
+			<< "Matrices are of unequal length at index" << i;
+		for (unsigned long j = 0; j < expect_matrix[i].size(); j++) {
+			if (expect_matrix[i][j]) {
+				if (actual_matrix[i][j] == nullptr) {
+					auto node_order    = ind.get_node_order();
+					auto node_id_order = inverse::inverse_vector(node_order);
+					FAIL() << "Matrices differ at index (" << i << "," << j << "), which is ("
+						   << node_id_order[i] << "," << node_id_order[j] << ")";
+				}
+			} else {
+				if (actual_matrix[i][j] != nullptr) {
+					auto node_order    = ind.get_node_order();
+					auto node_id_order = inverse::inverse_vector(node_order);
+					FAIL() << "Matrices differ at index (" << i << "," << j << "), which is ("
+						   << node_id_order[i] << "," << node_id_order[j] << ")";
+				}
+			}
+		}
+	}
+}
 } // namespace enn
