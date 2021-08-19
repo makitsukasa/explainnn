@@ -124,6 +124,13 @@ void enn::individual::add_edge(unsigned long source_id, unsigned long destinatio
 	adjacency_matrix[source_id][destination_id] = edge;
 }
 
+void enn::individual::insert(std::vector<unsigned long> source_ids, std::vector<unsigned long> destination_ids, std::unordered_map<unsigned long, node> nodes, std::vector<std::vector<edge *>> matrix){
+	if (source_ids.size() + destination_ids.size() > nodes.size() || source_ids.size() + destination_ids.size() > matrix.size()) {
+		throw "size of each arguments are inappropriate in individual::insert()";
+	}
+
+}
+
 std::vector<double> enn::individual::calculate(std::vector<double> input) {
 	// 入力層のノードにinputを代入
 	for (unsigned long i = 0; i < num_input; i++) {
