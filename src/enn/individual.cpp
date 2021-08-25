@@ -1,5 +1,6 @@
 #include "enn/individual.h"
 #include "lib/toposort.h"
+#include "lib/vectorlib.h"
 #include <algorithm>
 #include <iomanip>
 #include <iostream>
@@ -132,33 +133,36 @@ void enn::individual::insert(
 		throw std::runtime_error(
 			"size of each arguments are inappropriate in individual::insert()");
 	}
-	auto jack                  = node_id_order[source_id] + 1;
+	auto node_id_order         = inverse::inverse_vector(node_order);
+	auto jack                  = node_id_order[source_ids.back()] + 1;
 	auto additional_nodes_size = nodes.size() - source_ids.size() + destination_ids.size();
 	auto new_nodes_size        = nodes.size() + additional_nodes_size;
 	// *** 一旦node_id_order[source_id]の後ろに挿入 *** ここから
-	for (auto i = 0; i < new_nodes_size; i++) {
+	for (unsigned long i = 0; i < new_nodes_size; i++) {
 		add_node(node_type::Hidden, jack + i);
 	}
 	// ノードが増えたのでnode_id_orderを再計算
 	node_id_order = inverse::inverse_vector(node_order);
 	// 挿入する行列のnode_orderも計算
-	std::vector<unsigned long, additional_nodes_size> hidden_ids;
+	std::vector<unsigned long> hidden_ids(additional_nodes_size);
 	std::iota(hidden_ids.begin(), hidden_ids.end(), new_nodes_size - additional_nodes_size);
-	node_order_insertion = concat(source_ids, hidden_ids, destination_ids);
+	auto node_order_insertion = concat(source_ids, hidden_ids, destination_ids);
 
 	// 各rowに挿入
 	for (auto &row : adjacency_matrix) {
-		row.insert(row.begin() + node_id_order[new_node_id], additional_nodes_size, nullptr);
+		row.insert(row.begin() + jack, additional_nodes_size, nullptr);
 	}
 	// rowを挿入
-	adjacency_matrix.insert(
-		adjacency_matrix.begin() + node_id_order[new_node_id],
-		std::vector<edge *>(new_nodes_size, additional_nodes_size, nullptr));
+	for (unsigned long i = 0; i < additional_nodes_size; i++) {
+		adjacency_matrix.insert(
+			adjacency_matrix.begin() + jack + i,
+			std::vector<edge *>(additional_nodes_size, nullptr));
+	}
 	// edgeを代入
-	for (auto y = 0; y < matrix.size(); y++) {
+	for (unsigned long y = 0; y < matrix.size(); y++) {
 		auto y_ = node_id_order[node_order_insertion[y]];
-		for (auto x = 0; x < matrix[y].size(); x++) {
-			auto x_ = node_id_order[node_order_insertion[x]];
+		for (unsigned long x = 0; x < matrix[y].size(); x++) {
+			auto x_                  = node_id_order[node_order_insertion[x]];
 			adjacency_matrix[y_][x_] = matrix[y][x];
 		}
 	}
@@ -172,9 +176,9 @@ void enn::individual::insert(
 	auto sorted_indices = topo_sort(matrix_bool);
 	// node_orderを更新
 	auto old_node_order = std::vector<unsigned long>(node_order);
-	auto jack           = num_input + 1;
-	for (unsigned long i = 0; i < nodes.size() - jack - num_output; i++) {
-		node_order[i + jack] = old_node_order[sorted_indices[i] + jack];
+	auto jack_          = num_input + 1;
+	for (unsigned long i = 0; i < nodes.size() - jack_ - num_output; i++) {
+		node_order[i + jack_] = old_node_order[sorted_indices[i] + jack_];
 	}
 	// matrixを更新
 	auto new_node_id_order = inverse::inverse_vector(node_order);
