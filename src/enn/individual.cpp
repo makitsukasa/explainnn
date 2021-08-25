@@ -141,6 +141,11 @@ void enn::individual::insert(
 	}
 	// ノードが増えたのでnode_id_orderを再計算
 	node_id_order = inverse::inverse_vector(node_order);
+	// 挿入する行列のnode_orderも計算
+	std::vector<unsigned long, additional_nodes_size> hidden_ids;
+	std::iota(hidden_ids.begin(), hidden_ids.end(), new_nodes_size - additional_nodes_size);
+	node_order_insertion = concat(source_ids, hidden_ids, destination_ids);
+
 	// 各rowに挿入
 	for (auto &row : adjacency_matrix) {
 		row.insert(row.begin() + node_id_order[new_node_id], additional_nodes_size, nullptr);
@@ -151,13 +156,14 @@ void enn::individual::insert(
 		std::vector<edge *>(new_nodes_size, additional_nodes_size, nullptr));
 	// edgeを代入
 	for (auto y = 0; y < matrix.size(); y++) {
+		auto y_ = node_id_order[node_order_insertion[y]];
 		for (auto x = 0; x < matrix[y].size(); x++) {
-			// source_idsのとき
-			// destination_idsのとき
-			// それ以外のとき
+			auto x_ = node_id_order[node_order_insertion[x]];
+			adjacency_matrix[y_][x_] = matrix[y][x];
 		}
 	}
 	// *** 一旦node_id_order[source_id]の後ろに挿入 *** ここまで
+
 	// *** ソート *** ここから
 	// 隣接行列のうち入力も出力もhiddenである正方形の領域について
 	// bool型の配列を用意
