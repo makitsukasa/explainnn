@@ -36,4 +36,4 @@
 # boxy
 bin/
 obj/
-.vscode/
+.vscode/*.log

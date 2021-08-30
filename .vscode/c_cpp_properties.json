@@ -1,0 +1,27 @@
+{
+	"configurations": [
+		{
+			"name": "Linux",
+			"includePath": [
+				"${workspaceFolder}/**",
+				"/usr/local/gcc-11.1/include/c++/11.1.0",
+				"/usr/local/gcc-11.1/include/c++/11.1.0/x86_64-linux-gnu",
+				"/usr/local/gcc-11.1/include/c++/11.1.0/backward",
+				"/usr/local/gcc-11.1/lib/gcc/x86_64-linux-gnu/11.1.0/include",
+				"/usr/local/include",
+				"/usr/local/gcc-11.1/include",
+				"/usr/local/gcc-11.1/lib/gcc/x86_64-linux-gnu/11.1.0/include-fixed",
+				"/usr/include/x86_64-linux-gnu",
+				"/usr/include",
+				"${workspaceFolder}/incl/"
+			],
+			"defines": [],
+			"compilerPath": "/usr/bin/g++",
+			"intelliSenseMode": "linux-gcc-x64",
+			"cStandard": "c17",
+			"cppStandard": "c++20",
+			"configurationProvider": "ms-vscode.makefile-tools"
+		}
+	],
+	"version": 4
+}
