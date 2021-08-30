@@ -6,10 +6,28 @@
 # https://next49.hatenadiary.jp/entry/20120821/p1
 ###
 
+ifeq ($(OS),Windows_NT)
+	# MinGW
+	# ECHO = :
+
+	# general
+	ECHO = echo
+else
+	ECHO = echo
+endif
+
 ###
 # コンパイラ設定
 ###
-CXX        = /usr/bin/g++
+ifeq ($(OS),Windows_NT)
+	# cygwin
+	# CXX = /bin/g++.exe
+
+	# general
+	CXX = g++
+else
+	CXX = /usr/bin/g++
+endif
 CXXFLAGS   = -std=c++20 -Werror -Wall -Wextra -Wfloat-equal -Winit-self -Wno-missing-field-initializers -Wuninitialized
 LDFLAGS    =
 LIBS       = -lpthread
@@ -92,32 +110,32 @@ all: allclean allbuild
 build: $(RTARGET)
 
 run: $(RTARGET)
-	@echo \(makefile\) run $(RTARGETDIR)/$(RTARGET)
+	@$(ECHO) \(makefile\) run $(RTARGETDIR)/$(RTARGET)
 	@$(RTARGETDIR)/$(RTARGET)
 
 clean:
-	@echo \(makefile\) clean
+	@$(ECHO) \(makefile\) clean
 	@rm -f $(ROBJLIST) $(RTARGETDIR)/$(RTARGET)
 
 debugbuild: $(DTARGET)
 
 debugclean:
-	@echo \(makefile\) debugclean
+	@$(ECHO) \(makefile\) debugclean
 	@rm -f $(DOBJLIST) $(DTARGETDIR)/$(DTARGET)
 
 testbuild: $(DTARGET) $(TTARGET)
 
 testclean:
-	@echo \(makefile\) testclean
+	@$(ECHO) \(makefile\) testclean
 	@rm -f $(TOBJLIST) $(DOBJLIST) $(TTARGETDIR)/$(TTARGET)
 
 testrun: testbuild
-	@echo \(makefile\) testrun
+	@$(ECHO) \(makefile\) testrun
 	@chmod +x $(TTARGETDIR)/$(TTARGET)
 	@$(TTARGETDIR)/$(TTARGET) -v
 
 testlog: testclean testbuild
-	@echo \(makefile\) testlog
+	@$(ECHO) \(makefile\) testlog
 	@chmod +x $(TTARGETDIR)/$(TTARGET)
 	@$(TTARGETDIR)/$(TTARGET) -ojunit
 	@if [ ! -e $(TLOGDIR) ]; then mkdir -p $(TLOGDIR); fi
@@ -129,32 +147,32 @@ allclean: clean debugclean testclean
 
 # 8. ターゲット実行ファイルの生成
 $(RTARGET): $(ROBJLIST)
-	@echo \(makefile\) compile $(RTARGETDIR)/$(RTARGET)
+	@$(ECHO) \(makefile\) compile $(RTARGETDIR)/$(RTARGET)
 	@if [ ! -e $(RTARGETDIR) ]; then mkdir -p $(RTARGETDIR); fi
 	@$(CXX) -o $(RTARGETDIR)/$@ $^ $(RLDFLAGS) $(RLIBS)
 
 $(DTARGET): $(DOBJLIST)
-	@echo \(makefile\) compile $(DTARGETDIR)/$(DTARGET)
+	@$(ECHO) \(makefile\) compile $(DTARGETDIR)/$(DTARGET)
 	@if [ ! -e $(DTARGETDIR) ]; then mkdir -p $(DTARGETDIR); fi
 	@$(CXX) -o $(DTARGETDIR)/$@ $^ $(DLDFLAGS) $(DLIBS)
 
 $(TTARGET): $(TOBJLIST)
-	@echo \(makefile\) compile $(TTARGETDIR)/$(TTARGET)
+	@$(ECHO) \(makefile\) compile $(TTARGETDIR)/$(TTARGET)
 	@if [ ! -e $(TTARGETDIR) ]; then mkdir -p $(TTARGETDIR); fi
 	@$(CXX) -o $(TTARGETDIR)/$@ $^ $(TMODULELIST) $(TLDFLAGS) $(TLIBS)
 
 # 9. 中間バイナリの生成
 $(ROBJECTDIR)/%.o: $(SOURCEDIR)/%.cpp
-	@echo \(makefile\) compile $@
+	@$(ECHO) \(makefile\) compile $@
 	@if [ ! -e `dirname $@` ]; then mkdir -p `dirname $@`; fi
 	@$(CXX) $(RCXXFLAGS) $(RINCLUDES) -o $@ -c $<
 
 $(DOBJECTDIR)/%.o: $(SOURCEDIR)/%.cpp
-	@echo \(makefile\) compile $@
+	@$(ECHO) \(makefile\) compile $@
 	@if [ ! -e `dirname $@` ]; then mkdir -p `dirname $@`; fi
 	@$(CXX) $(DCXXFLAGS) $(DINCLUDES) -o $@ -c $<
 
 $(TOBJECTDIR)/%.o: $(TSOURCEDIR)/%.cpp
-	@echo \(makefile\) compile $@
+	@$(ECHO) \(makefile\) compile $@
 	@if [ ! -e `dirname $@` ]; then mkdir -p `dirname $@`; fi
 	@$(CXX) $(TCXXFLAGS) $(TINCLUDES) -o $@ -c $<
