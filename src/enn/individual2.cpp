@@ -13,7 +13,7 @@ void enn::individual::insert(
 		throw std::runtime_error(
 			"size of each arguments are inappropriate in individual::insert()");
 	}
-	auto node_id_order         = inverse::inverse_vector(node_order);
+	auto node_id_order         = vectorlib::inverse(node_order);
 	auto jack                  = node_id_order[source_ids.back()] + 1;
 	auto additional_nodes_size = nodes.size() - source_ids.size() + destination_ids.size();
 	auto new_nodes_size        = nodes.size() + additional_nodes_size;
@@ -22,11 +22,11 @@ void enn::individual::insert(
 		add_node(node_type::Hidden, jack + i);
 	}
 	// ノードが増えたのでnode_id_orderを再計算
-	node_id_order = inverse::inverse_vector(node_order);
+	node_id_order = vectorlib::inverse(node_order);
 	// 挿入する行列のnode_orderも計算
 	std::vector<unsigned long> hidden_ids(additional_nodes_size);
 	std::iota(hidden_ids.begin(), hidden_ids.end(), new_nodes_size - additional_nodes_size);
-	auto node_order_insertion = concat(source_ids, hidden_ids, destination_ids);
+	auto node_order_insertion = vectorlib::concat(source_ids, hidden_ids, destination_ids);
 
 	// 各rowに挿入
 	for (auto &row : adjacency_matrix) {
@@ -61,7 +61,7 @@ void enn::individual::insert(
 		node_order[i + jack_] = old_node_order[sorted_indices[i] + jack_];
 	}
 	// matrixを更新
-	auto new_node_id_order = inverse::inverse_vector(node_order);
+	auto new_node_id_order = vectorlib::inverse(node_order);
 	std::vector<std::vector<edge *>> new_adjacency_matrix(
 		adjacency_matrix.size(), std::vector<edge *>(adjacency_matrix.size()));
 	for (unsigned long x = 0; x < nodes.size(); x++) {
