@@ -52,7 +52,7 @@ void enn::individual::add_node(
 	unsigned long source_id, unsigned long destination_id, edge *edge1, edge *edge2) {
 	auto new_size      = nodes.size() + 1;
 	auto new_node_id   = nodes.size();
-	auto node_id_order = inverse::inverse_vector(node_order);
+	auto node_id_order = vectorlib::inverse(node_order);
 
 	// 明らかに不適な操作は弾く
 	if (source_id == destination_id) {
@@ -73,7 +73,7 @@ void enn::individual::add_node(
 	add_node(node_type::Hidden, index + 1);
 
 	// ノードが増えたのでnode_id_orderを再計算
-	node_id_order = inverse::inverse_vector(node_order);
+	node_id_order = vectorlib::inverse(node_order);
 
 	// 各rowに挿入
 	for (auto &row : adjacency_matrix) {
@@ -106,7 +106,7 @@ void enn::individual::add_node(
 	}
 
 	// matrixを更新
-	auto new_node_id_order = inverse::inverse_vector(node_order);
+	auto new_node_id_order = vectorlib::inverse(node_order);
 	std::vector<std::vector<edge *>> new_adjacency_matrix(
 		adjacency_matrix.size(), std::vector<edge *>(adjacency_matrix.size()));
 	for (unsigned long x = 0; x < nodes.size(); x++) {
