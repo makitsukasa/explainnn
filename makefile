@@ -25,10 +25,11 @@ ifeq ($(OS),Windows_NT)
 
 	# general
 	CXX = g++
+	CXXFLAGS = -std=gnu++20 -Werror -Wall -Wextra -Wfloat-equal -Winit-self -Wno-missing-field-initializers -Wuninitialized
 else
 	CXX = /usr/bin/g++
+	CXXFLAGS = -std=c++20 -Werror -Wall -Wextra -Wfloat-equal -Winit-self -Wno-missing-field-initializers -Wuninitialized
 endif
-CXXFLAGS   = -std=c++20 -Werror -Wall -Wextra -Wfloat-equal -Winit-self -Wno-missing-field-initializers -Wuninitialized
 LDFLAGS    =
 LIBS       = -lpthread
 INCLUDES   = -I./incl
