@@ -21,6 +21,20 @@
 			"cStandard": "c17",
 			"cppStandard": "c++20",
 			"configurationProvider": "ms-vscode.makefile-tools"
+		},
+		{
+			"name": "cygwin_321522",
+			"includePath": [
+				"${workspaceFolder}/**",
+				"${workspaceFolder}/incl/**",
+				"C:\\Users\\321522\\Documents\\cygwin\\lib\\gcc\\x86_64-pc-cygwin\\11\\**"
+			],
+			"defines": [],
+			"compilerPath": "C:\\Users\\321522\\Documents\\cygwin\\bin\\g++",
+			"intelliSenseMode": "linux-gcc-x64",
+			"cStandard": "c17",
+			"cppStandard": "c++20",
+			"configurationProvider": "ms-vscode.makefile-tools"
 		}
 	],
 	"version": 4
