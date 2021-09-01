@@ -27,7 +27,10 @@
 			"includePath": [
 				"${workspaceFolder}/**",
 				"${workspaceFolder}/incl/**",
-				"C:\\Users\\321522\\Documents\\cygwin\\lib\\gcc\\x86_64-pc-cygwin\\11\\**"
+				"C:\\Users\\321522\\Documents\\cygwin\\lib\\gcc\\x86_64-pc-cygwin\\11",
+				"C:\\Users\\321522\\Documents\\cygwin\\lib\\gcc\\x86_64-pc-cygwin\\11\\include",
+				"C:\\Users\\321522\\Documents\\cygwin\\lib\\gcc\\x86_64-pc-cygwin\\11\\include\\c++",
+				"C:\\Users\\321522\\Documents\\cygwin\\lib\\gcc\\x86_64-pc-cygwin\\11\\include\\c++\\x86_64-pc-cygwin"
 			],
 			"defines": [],
 			"compilerPath": "C:\\Users\\321522\\Documents\\cygwin\\bin\\g++",
