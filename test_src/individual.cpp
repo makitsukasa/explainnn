@@ -18,6 +18,7 @@ public:
 		return individual.get_bool_matrix_hidden();
 	}
 };
+} // namespace enn
 
 TEST(individual_tester, constructor_same_seed) {
 	enn::random_engine = std::mt19937(6700417);
@@ -47,7 +48,7 @@ TEST(individual_tester, get_bool_matrix_hidden_as_is) {
 		EXPECT_FLOAT_EQ(expect_order[i], actual_order[i]) << "Vectors differ at index " << i;
 	}
 
-	auto actual_matrix = individual_tester::get_bool_matrix_hidden(ind);
+	auto actual_matrix = enn::individual_tester::get_bool_matrix_hidden(ind);
 	std::vector<std::vector<bool>> expect_matrix{
 		{false, true, false},
 		{false, false, true},
@@ -78,7 +79,7 @@ TEST(individual_tester, get_bool_matrix_hidden_sort) {
 		EXPECT_FLOAT_EQ(expect_order[i], actual_order[i]) << "Vectors differ at index " << i;
 	}
 
-	auto actual_matrix = individual_tester::get_bool_matrix_hidden(ind);
+	auto actual_matrix = enn::individual_tester::get_bool_matrix_hidden(ind);
 	std::vector<std::vector<bool>> expect_matrix{
 		{false, true, false},
 		{false, false, true},
