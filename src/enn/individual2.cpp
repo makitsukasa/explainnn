@@ -15,11 +15,12 @@ void enn::individual::insert(
 	}
 	auto node_id_order         = vectorlib::inverse(node_order);
 	auto jack                  = node_id_order[source_ids.back()] + 1;
-	auto additional_nodes_size = nodes.size() - source_ids.size() + destination_ids.size();
+	auto additional_nodes_size = nodes.size() - source_ids.size() - destination_ids.size();
 	auto new_nodes_size        = nodes.size() + additional_nodes_size;
 	// *** 一旦node_id_order[source_id]の後ろに挿入 *** ここから
-	for (unsigned long i = 0; i < new_nodes_size; i++) {
+	for (unsigned long i = 0; i < additional_nodes_size; i++) {
 		add_node(node_type::Hidden, jack + i);
+		std::cout << jack << "+" << i << std::endl;
 	}
 	// ノードが増えたのでnode_id_orderを再計算
 	node_id_order = vectorlib::inverse(node_order);
@@ -42,7 +43,7 @@ void enn::individual::insert(
 	for (unsigned long y = 0; y < matrix.size(); y++) {
 		auto y_ = node_id_order[node_order_insertion[y]];
 		for (unsigned long x = 0; x < matrix[y].size(); x++) {
-			auto x_                  = node_id_order[node_order_insertion[x]];
+			auto x_ = node_id_order[node_order_insertion[x]];
 			adjacency_matrix[y_][x_] = matrix[y][x];
 		}
 	}
