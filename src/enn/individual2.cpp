@@ -16,8 +16,7 @@ void enn::individual::insert(
 	auto node_id_order         = vectorlib::inverse(node_order);
 	auto jack                  = node_id_order[source_ids.back()] + 1;
 	auto additional_nodes_size = nodes.size() - source_ids.size() - destination_ids.size();
-	auto new_nodes_size        = nodes.size() + additional_nodes_size;
-	std::cout << jack << "," << additional_nodes_size << "," << new_nodes_size << std::endl;
+	auto new_node_size         = this->nodes.size() + additional_nodes_size;
 	// *** 一旦node_id_order[source_id]の後ろに挿入 *** ここから
 	std::vector<unsigned long> hidden_ids(additional_nodes_size);
 	for (unsigned long i = 0; i < additional_nodes_size; i++) {
@@ -29,11 +28,6 @@ void enn::individual::insert(
 	// 挿入する行列のnode_orderも計算
 	auto node_order_insertion = vectorlib::concat(source_ids, hidden_ids, destination_ids);
 
-	for (auto i : node_order_insertion) {
-		std::cout << i << ",";
-	}
-	std::cout << std::endl;
-
 	// 各rowに挿入
 	for (auto &row : adjacency_matrix) {
 		row.insert(row.begin() + jack, additional_nodes_size, nullptr);
@@ -41,9 +35,17 @@ void enn::individual::insert(
 	// rowを挿入
 	for (unsigned long i = 0; i < additional_nodes_size; i++) {
 		adjacency_matrix.insert(
-			adjacency_matrix.begin() + jack + i,
-			std::vector<edge *>(additional_nodes_size, nullptr));
+			adjacency_matrix.begin() + jack + i, std::vector<edge *>(new_node_size, nullptr));
 	}
+
+	for (auto row : adjacency_matrix) {
+		for (auto i : row) {
+			std::cout << (i ? "e" : "_");
+		}
+		std::cout << std::endl;
+	}
+	std::cout << std::endl;
+
 	// edgeを代入
 	for (unsigned long y = 0; y < matrix.size(); y++) {
 		auto y_ = node_id_order[node_order_insertion[y]];
@@ -52,19 +54,38 @@ void enn::individual::insert(
 			adjacency_matrix[y_][x_] = matrix[y][x];
 		}
 	}
+
+	for (auto row : adjacency_matrix) {
+		for (auto i : row) {
+			std::cout << (i ? "e" : "_");
+		}
+		std::cout << std::endl;
+	}
+	std::cout << std::endl;
 	// *** 一旦node_id_order[source_id]の後ろに挿入 *** ここまで
 
 	// *** ソート *** ここから
 	// 隣接行列のうち入力も出力もhiddenである正方形の領域について
 	// bool型の配列を用意
 	auto matrix_bool = get_bool_matrix_hidden();
+	for (auto row : matrix_bool) {
+		for (auto i : row) {
+			std::cout << (i ? "1" : "_");
+		}
+		std::cout << std::endl;
+	}
+	std::cout << std::endl;
 	// argsortっぽい感じ
 	auto sorted_indices = topo_sort(matrix_bool);
+	for (auto i : sorted_indices) {
+		std::cout << i << ",";
+	}
+	std::cout << std::endl;
 	// node_orderを更新
 	auto old_node_order = std::vector<unsigned long>(node_order);
 	auto jack_          = num_input + 1;
-	for (unsigned long i = 0; i < nodes.size() - jack_ - num_output; i++) {
-		// std::cout << i << "+" << jack_ << ":" << sorted_indices[i] << "+" << jack_ << std::endl;
+	for (unsigned long i = 0; i < this->nodes.size() - jack_ - num_output; i++) {
+		std::cout << i << "+" << jack_ << ":" << sorted_indices[i] << "+" << jack_ << std::endl;
 		node_order[i + jack_] = old_node_order[sorted_indices[i] + jack_];
 	}
 	// matrixを更新
@@ -78,6 +99,20 @@ void enn::individual::insert(
 			new_adjacency_matrix[y_new][x_new] = adjacency_matrix[y][x];
 		}
 	}
+	for (auto row : adjacency_matrix) {
+		for (auto i : row) {
+			std::cout << (i ? "e" : "_");
+		}
+		std::cout << std::endl;
+	}
+	std::cout << std::endl;
+	for (auto row : new_adjacency_matrix) {
+		for (auto i : row) {
+			std::cout << (i ? "e" : "_");
+		}
+		std::cout << std::endl;
+	}
+	std::cout << std::endl;
 	adjacency_matrix = new_adjacency_matrix;
 	// *** ソート *** ここまで
 }
