@@ -35,7 +35,7 @@ std::vector<unsigned long> enn::individual::get_node_order() const {
 	return node_order;
 }
 
-void enn::individual::add_node(node_type node_type, unsigned long index) {
+unsigned long enn::individual::add_node(node_type node_type, unsigned long index) {
 	if (node_type == node_type::Hidden) {
 		// 計算中に挿入するHiddenはbiasとoutputの間に挿入
 		index = std::clamp(index, num_input + 1, (unsigned long)nodes.size());
@@ -45,7 +45,9 @@ void enn::individual::add_node(node_type node_type, unsigned long index) {
 	}
 
 	node_order.insert(node_order.begin() + index, nodes.size());
-	nodes.insert(std::make_pair(nodes.size(), node(node_type)));
+	auto id = nodes.size();
+	nodes.insert(std::make_pair(id, node(node_type)));
+	return id;
 }
 
 void enn::individual::add_node(
