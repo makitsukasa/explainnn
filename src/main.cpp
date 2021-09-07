@@ -3,27 +3,20 @@
 #include <iostream>
 
 int main() {
-	auto ind     = enn::individual(3, 2);
-	auto output1 = ind.calculate(std::vector<double>({0.1, 0.2, 0.3}));
-	for (auto x : output1) {
-		std::cout << x << ",";
-	}
-	std::cout << std::endl;
+	std::vector<unsigned long> source_ids              = {0};
+	std::vector<unsigned long> destination_ids         = {4};
+	std::unordered_map<unsigned long, enn::node> nodes = {
+		{0, enn::node(enn::node_type::Input)},
+		{1, enn::node(enn::node_type::Hidden)},
+		{2, enn::node(enn::node_type::Output)},
+	};
+	std::vector<std::vector<enn::edge *>> matrix;
+	matrix.assign(3, std::vector<enn::edge *>(3, nullptr));
+	matrix[0][1] = new enn::edge(0.1);
+	matrix[1][2] = new enn::edge(0.1);
 
-	ind.add_node(0, 4, new enn::edge(0.1), new enn::edge(0.1));
-	ind.add_node(1, 5, new enn::edge(0.1), new enn::edge(0.1));
-
-	auto output2 = ind.calculate(std::vector<double>({0.1, 0.2, 0.3}));
-	for (auto x : output2) {
-		std::cout << x << ",";
-	}
-	std::cout << std::endl;
-
-	ind.add_node(6, 7, new enn::edge(0.1), new enn::edge(0.1));
-
-	auto output3 = ind.calculate(std::vector<double>({0.1, 0.2, 0.3}));
-	for (auto x : output3) {
-		std::cout << x << ",";
-	}
-	std::cout << std::endl;
+	enn::random_engine = std::mt19937(6700417);
+	auto ind1          = enn::individual(3, 2);
+	ind1.insert(source_ids, destination_ids, nodes, matrix);
+	auto out1 = ind1.calculate(std::vector<double>({0.1, 0.2, 0.3}));
 }
