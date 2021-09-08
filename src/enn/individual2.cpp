@@ -116,7 +116,11 @@ void enn::individual::update(
 	// std::cout << std::endl;
 	// for (auto row : adjacency_matrix) {
 	// 	for (auto i : row) {
-	// 		std::cout << (i ? "e" : "_");
+	// 		if (i) {
+	// 			std::cout << std::setw(4) << i->calculate(1.0) << ",";
+	// 		} else {
+	// 			std::cout << "____,";
+	// 		}
 	// 	}
 	// 	std::cout << std::endl;
 	// }
