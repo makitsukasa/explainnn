@@ -17,6 +17,10 @@ int main() {
 
 	enn::random_engine = std::mt19937(6700417);
 	auto ind1          = enn::individual(3, 2);
-	ind1.insert(source_ids, destination_ids, nodes, matrix);
+	ind1.update(source_ids, destination_ids, nodes, matrix);
 	auto out1 = ind1.calculate(std::vector<double>({0.1, 0.2, 0.3}));
+	for (auto i : out1) {
+		std::cout << i << ",";
+	}
+	std::cout << std::endl;
 }
