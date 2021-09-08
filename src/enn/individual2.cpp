@@ -114,7 +114,6 @@ void enn::individual::update(
 		}
 	}
 	// std::cout << std::endl;
-	adjacency_matrix = new_adjacency_matrix;
 	// for (auto row : adjacency_matrix) {
 	// 	for (auto i : row) {
 	// 		std::cout << (i ? "e" : "_");
@@ -129,5 +128,6 @@ void enn::individual::update(
 	// 	std::cout << std::endl;
 	// }
 	// std::cout << std::endl;
+	adjacency_matrix = new_adjacency_matrix;
 	// *** ソート *** ここまで
 }
