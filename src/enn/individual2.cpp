@@ -74,3 +74,30 @@ void enn::individual::update(
 	adjacency_matrix = new_adjacency_matrix;
 	// *** ソート *** ここまで
 }
+
+void enn::individual::update(
+	std::unordered_map<unsigned long, node> nodes, std::vector<std::vector<edge *>> matrix) {
+
+	auto num_source      = 0;
+	auto num_destination = 0;
+	for (auto pair : nodes) {
+		switch (pair.second.get_type()) {
+		case node_type::Input:
+			num_source++;
+			break;
+		case node_type::Output:
+			num_destination++;
+			break;
+		}
+	}
+	std::vector<unsigned long> source_ids;
+	std::vector<unsigned long> destination_ids;
+	while (true) {
+		// (入力、バイアス、隠れ)ノードからsourceノードをランダムに
+		
+
+		// (隠れ、出力)ノードから上で選んだのと合うdestinationノードをランダムに
+		break;
+	}
+	update(source_ids, destination_ids, nodes, matrix);
+}
