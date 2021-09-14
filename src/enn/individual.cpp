@@ -5,6 +5,8 @@
 #include <iomanip>
 #include <iostream>
 
+enn::individual::individual() {}
+
 enn::individual::individual(unsigned long num_input, unsigned long num_output)
 	: num_input(num_input), num_output(num_output) {
 
