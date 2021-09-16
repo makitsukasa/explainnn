@@ -64,3 +64,26 @@ std::vector<unsigned long> topo_sort(std::vector<std::vector<bool>> matrix) {
 
 	return ans;
 }
+
+// 下のやつで使う再帰関数
+std::vector<std::vector<bool>> calc_reachablility_nodes(
+	std::vector<std::vector<bool>> adjacency_matrix,
+	std::vector<std::vector<bool>> reachablility_matrix, std::vector<bool> is_visited) {
+	if (s == g) return 1;
+	if (visited[s]) return 0;
+	visited[s] = 1;
+	for (int i = 0; i < N; i++) {
+		if (a[s][i] && calc_reachablility_nodes(i, g)) return 1;
+	}
+	return 0;
+}
+
+// 到達可能性行列
+std::vector<std::vector<bool>> calc_reachablility_matrix(
+	std::vector<std::vector<bool>> adjacency_matrix, std::vector<unsigned long> source_ids) {
+	std::vector<bool> is_visited(adjacency_matrix.size(), false);
+	for (auto s : source_ids) {
+		calc_reachablility_matrix(adjacency_matrix, reachablility_matrix, is_visited);
+	}
+	return reachablility_matrix;
+}
