@@ -67,23 +67,29 @@ std::vector<unsigned long> topo_sort(std::vector<std::vector<bool>> matrix) {
 
 // 下のやつで使う再帰関数
 std::vector<std::vector<bool>> calc_reachablility_nodes(
-	std::vector<std::vector<bool>> adjacency_matrix,
-	std::vector<std::vector<bool>> reachablility_matrix, std::vector<bool> is_visited) {
-	if (s == g) return 1;
-	if (visited[s]) return 0;
-	visited[s] = 1;
-	for (int i = 0; i < N; i++) {
-		if (a[s][i] && calc_reachablility_nodes(i, g)) return 1;
+	std::vector<std::vector<bool>> &adjacency_matrix,
+	std::vector<std::vector<bool>> &reachablility_matrix, std::vector<bool> &is_visited,
+	unsigned long source_id) {
+	if (is_visited[source_id]) return;
+	is_visited[source_id] = true;
+	for (unsigned long i = 0; i < adjacency_matrix.size(); i++) {
+		auto r = calc_reachablility_nodes(adjacency_matrix, reachablility_matrix, is_visited, i);
+		for (auto node_id : r) {
+			reachablility_matrix[i][node_id] = true;
+		}
 	}
-	return 0;
+
+	return;
 }
 
 // 到達可能性行列
 std::vector<std::vector<bool>> calc_reachablility_matrix(
 	std::vector<std::vector<bool>> adjacency_matrix, std::vector<unsigned long> source_ids) {
+	std::vector<std::vector<bool>> reachablility_matrix(
+		adjacency_matrix.size(), std::vector<bool>(adjacency_matrix.size()));
 	std::vector<bool> is_visited(adjacency_matrix.size(), false);
 	for (auto s : source_ids) {
-		calc_reachablility_matrix(adjacency_matrix, reachablility_matrix, is_visited);
+		calc_reachablility_nodes(adjacency_matrix, reachablility_matrix, is_visited, s);
 	}
 	return reachablility_matrix;
 }
