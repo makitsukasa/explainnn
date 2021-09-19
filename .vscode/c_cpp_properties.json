@@ -1,9 +1,8 @@
 {
 	"configurations": [
 		{
-			"name": "Linux",
+			"name": "WSL",
 			"includePath": [
-				"${workspaceFolder}/**",
 				"/usr/local/gcc-11.1/include/c++/11.1.0",
 				"/usr/local/gcc-11.1/include/c++/11.1.0/x86_64-linux-gnu",
 				"/usr/local/gcc-11.1/include/c++/11.1.0/backward",
@@ -13,7 +12,7 @@
 				"/usr/local/gcc-11.1/lib/gcc/x86_64-linux-gnu/11.1.0/include-fixed",
 				"/usr/include/x86_64-linux-gnu",
 				"/usr/include",
-				"${workspaceFolder}/incl/"
+				"${workspaceFolder}/**"
 			],
 			"defines": [],
 			"compilerPath": "/usr/bin/g++",
