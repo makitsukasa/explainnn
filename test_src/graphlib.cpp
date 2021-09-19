@@ -1,8 +1,8 @@
-#include "lib/toposort.h"
+#include "lib/graphlib.h"
 #include "enn/edge.h"
 #include <gtest/gtest.h>
 
-TEST(topo_sort_tester, two_as_is) {
+TEST(graphlib_tester, two_as_is) {
 	std::vector<std::vector<bool>> matrix = {
 		{false, true},
 		{false, false},
@@ -16,7 +16,7 @@ TEST(topo_sort_tester, two_as_is) {
 	}
 }
 
-TEST(topo_sort_tester, two_reverse) {
+TEST(graphlib_tester, two_reverse) {
 	std::vector<std::vector<bool>> matrix = {
 		{false, false},
 		{true, false},
@@ -30,7 +30,7 @@ TEST(topo_sort_tester, two_reverse) {
 	}
 }
 
-TEST(topo_sort_tester, three_as_is) {
+TEST(graphlib_tester, three_as_is) {
 	std::vector<std::vector<bool>> matrix = {
 		{false, true, true},
 		{false, false, true},
@@ -45,7 +45,7 @@ TEST(topo_sort_tester, three_as_is) {
 	}
 }
 
-TEST(topo_sort_tester, three_reverse) {
+TEST(graphlib_tester, three_reverse) {
 	std::vector<std::vector<bool>> matrix = {
 		{false, false, false},
 		{true, false, true},
@@ -60,7 +60,7 @@ TEST(topo_sort_tester, three_reverse) {
 	}
 }
 
-TEST(calc_reachablility_matrix_tester, a) {
+TEST(graphlib_tester, calc_reachablility_matrix) {
 	std::vector<std::vector<bool>> adjacency_matrix = {
 		{false, false, false, false, false, false, true, false, false},
 		{false, false, false, false, false, false, false, true, false},

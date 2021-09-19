@@ -1,4 +1,4 @@
-#include "lib/toposort.h"
+#include "lib/graphlib.h"
 #include "enn/edge.h"
 #include <set>
 #include <vector>

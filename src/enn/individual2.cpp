@@ -1,5 +1,5 @@
 #include "enn/individual.h"
-#include "lib/toposort.h"
+#include "lib/graphlib.h"
 #include "lib/vectorlib.h"
 #include <algorithm>
 #include <iomanip>
