@@ -88,13 +88,14 @@ void enn::individual::update(
 		case node_type::Output:
 			num_destination++;
 			break;
+		default:
+			break;
 		}
 	}
 	std::vector<unsigned long> source_ids;
 	std::vector<unsigned long> destination_ids;
 	while (true) {
 		// (入力、バイアス、隠れ)ノードからsourceノードをランダムに
-		
 
 		// (隠れ、出力)ノードから上で選んだのと合うdestinationノードをランダムに
 		break;

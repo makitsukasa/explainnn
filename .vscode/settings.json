@@ -76,7 +76,8 @@
 		"iomanip": "cpp",
 		"any": "cpp",
 		"set": "cpp",
-		"variant": "cpp"
+		"variant": "cpp",
+		"unordered_set": "cpp"
 	},
 	"python.pythonPath": "/usr/bin/python3"
 }

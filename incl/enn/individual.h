@@ -39,6 +39,8 @@ public:
 	void update(
 		std::vector<unsigned long> source_ids, std::vector<unsigned long> destination_ids,
 		std::unordered_map<unsigned long, node> nodes, std::vector<std::vector<edge *>> matrix);
+	void
+	update(std::unordered_map<unsigned long, node> nodes, std::vector<std::vector<edge *>> matrix);
 	std::vector<double> calculate(std::vector<double> input);
 };
 } // namespace enn
