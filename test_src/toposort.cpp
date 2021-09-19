@@ -59,3 +59,42 @@ TEST(topo_sort_tester, three_reverse) {
 		EXPECT_FLOAT_EQ(expected[i], actual[i]) << "Vectors differ at index " << i;
 	}
 }
+
+TEST(calc_reachablility_matrix_tester, a) {
+	std::vector<std::vector<bool>> adjacency_matrix = {
+		{false, false, false, false, false, false, true, false, false},
+		{false, false, false, false, false, false, false, true, false},
+		{false, false, false, false, false, false, true, false, true},
+		{false, false, false, false, false, false, false, false, false},
+		{false, false, false, false, false, false, false, false, false},
+		{false, false, false, false, false, false, false, false, false},
+		{false, false, false, true, false, false, false, true, false},
+		{false, false, false, true, false, false, false, false, false},
+		{false, false, false, false, true, true, false, false, false},
+	};
+
+	std::vector<std::vector<bool>> expected = {
+		{false, false, false, true, false, false, true, true, false},
+		{false, false, false, true, false, false, false, true, false},
+		{false, false, false, true, true, true, true, true, true},
+		{false, false, false, false, false, false, false, false, false},
+		{false, false, false, false, false, false, false, false, false},
+		{false, false, false, false, false, false, false, false, false},
+		{false, false, false, true, false, false, false, true, false},
+		{false, false, false, true, false, false, false, false, false},
+		{false, false, false, false, true, true, false, false, false},
+	};
+	std::vector<unsigned long> source_node_ids = {0, 1, 2};
+
+	auto actual = calc_reachablility_matrix(adjacency_matrix, source_node_ids);
+
+	EXPECT_EQ(expected.size(), actual.size()) << "Vectors are of unequal length";
+	for (unsigned long i = 0; i < expected.size(); i++) {
+		EXPECT_EQ(expected[i].size(), actual[i].size())
+			<< "Matrices are of unequal length at index" << i;
+		for (unsigned long j = 0; j < expected[i].size(); j++) {
+			EXPECT_EQ(expected[i][j], actual[i][j])
+				<< "Matrices differ at index (" << i << "," << j << ")";
+		}
+	}
+}
