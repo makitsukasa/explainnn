@@ -1,6 +1,6 @@
 #include "lib/graphlib.h"
-#include "enn/edge.h"
 #include <set>
+#include <stdexcept>
 #include <vector>
 
 // https://en.wikipedia.org/wiki/Topological_sorting
@@ -108,4 +108,26 @@ std::vector<std::vector<bool>> calc_reachablility_matrix(
 		calc_reachablility_matrix(adjacency_matrix, reachablility_matrix, is_visited, i);
 	}
 	return reachablility_matrix;
+}
+
+// 到達不可能なノードidを全部返す
+std::vector<unsigned long> get_unreachable_nodes(
+	std::vector<std::vector<bool>> adjacency_matrix, std::vector<unsigned long> source_node_ids) {
+
+	std::vector<bool> reachable_node_table(adjacency_matrix.size(), false);
+	auto reachablility_matrix = calc_reachablility_matrix(adjacency_matrix, source_node_ids);
+	for (unsigned long y = 0; y < reachablility_matrix.size(); y++) {
+		for (unsigned long x = 0; x < reachablility_matrix.size(); x++) {
+			reachable_node_table[x] =
+				reachable_node_table[x] || reachablility_matrix[y][x] ? true : false;
+		}
+	}
+
+	std::vector<unsigned long> unreachable_nodes;
+	for (unsigned long i = 0; i < reachablility_matrix.size(); i++) {
+		if (reachable_node_table[i]) {
+			unreachable_nodes.push_back(i);
+		}
+	}
+	return unreachable_nodes;
 }

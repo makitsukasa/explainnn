@@ -54,7 +54,7 @@ int main() {
 		// 完全にお試し用のものなので後で考えなおす
 		std::vector<enn::individual> new_population;
 		new_population.push_back(parents[0]);
-		// new_population[0].insert();
+		new_population[0].update(nodes, matrix);
 		new_population.push_back(parents[0]);
 		new_population.push_back(parents[1]);
 
