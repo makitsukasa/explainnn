@@ -1,9 +1,65 @@
 #include "enn/individual.h"
 #include "lib/graphlib.h"
+#include "lib/randomlib.h"
 #include "lib/vectorlib.h"
 #include <algorithm>
 #include <iomanip>
 #include <iostream>
+
+void enn::individual::update(
+	std::unordered_map<unsigned long, node> nodes, std::vector<std::vector<edge *>> matrix) {
+	auto num_source      = 0;
+	auto num_destination = 0;
+	for (auto pair : nodes) {
+		switch (pair.second.get_type()) {
+		case node_type::Input:
+			num_source++;
+			break;
+		case node_type::Output:
+			num_destination++;
+			break;
+		default:
+			break;
+		}
+	}
+
+	std::vector<unsigned long> source_candidates{};
+	std::vector<unsigned long> destination_candidates(this->num_output);
+	std::iota(destination_candidates.begin(), destination_candidates.end(), this->num_input + 1);
+
+	std::vector<unsigned long> source_ids;
+	std::vector<unsigned long> destination_ids;
+	while (true) {
+		// (隠れ、出力)ノードからdestinationノードをランダムに
+		std::sample(
+			destination_candidates.begin(), destination_candidates.end(),
+			std::back_inserter(destination_ids), num_input, random_engine);
+
+		// destinationノードより下流はsourceノードにならない
+		std::vector<std::vector<bool>> adjacency_matrix_bool(
+			adjacency_matrix.size(), std::vector<bool>(adjacency_matrix.size()));
+		for (unsigned long x = 0; x < adjacency_matrix.size(); x++) {
+			for (unsigned long y = 0; y < adjacency_matrix.size(); y++) {
+				adjacency_matrix_bool[y][x] = adjacency_matrix[y][x] ? true : false;
+			}
+		}
+
+		// (入力、バイアス、隠れ)ノードから上で選んだのと合うsourceノードをランダムに
+		auto table = get_reachable_node_table(adjacency_matrix_bool, destination_ids);
+		for (unsigned long i = 0; i < this->num_input + 1; i++) {
+			if (!table[i]) return;
+			source_candidates.push_back(i);
+		}
+		std::sample(
+			source_candidates.begin(), source_candidates.end(), std::back_inserter(source_ids),
+			num_input, random_engine);
+
+		// 本当はここでupdateできるかどうかみたいなのをチェック
+		// ここじゃないかもしれない
+		break;
+	}
+	update(source_ids, destination_ids, nodes, matrix);
+}
 
 std::vector<double> enn::individual::calculate(std::vector<double> input) {
 	// 入力層のノードにinputを代入
