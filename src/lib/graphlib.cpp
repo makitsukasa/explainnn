@@ -110,8 +110,8 @@ std::vector<std::vector<bool>> calc_reachablility_matrix(
 	return reachablility_matrix;
 }
 
-// 到達不可能なノードidを全部返す
-std::vector<unsigned long> get_unreachable_nodes(
+// ノードidが到達不可能かどうかを返す
+std::vector<bool> get_reachable_node_table(
 	std::vector<std::vector<bool>> adjacency_matrix, std::vector<unsigned long> source_node_ids) {
 
 	std::vector<bool> reachable_node_table(adjacency_matrix.size(), false);
@@ -122,12 +122,5 @@ std::vector<unsigned long> get_unreachable_nodes(
 				reachable_node_table[x] || reachablility_matrix[y][x] ? true : false;
 		}
 	}
-
-	std::vector<unsigned long> unreachable_nodes;
-	for (unsigned long i = 0; i < reachablility_matrix.size(); i++) {
-		if (reachable_node_table[i]) {
-			unreachable_nodes.push_back(i);
-		}
-	}
-	return unreachable_nodes;
+	return reachable_node_table;
 }
