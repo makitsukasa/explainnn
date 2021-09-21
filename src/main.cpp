@@ -20,7 +20,7 @@ int main() {
 	const auto num_input       = 3;
 	const auto num_output      = 1;
 	const auto population_size = 3;
-	const auto num_generation  = 10;
+	const auto num_generation  = 1;
 
 	// 挿入で使うミニNN
 	std::tuple<std::unordered_map<unsigned long, enn::node>, std::vector<std::vector<enn::edge *>>>
@@ -54,7 +54,9 @@ int main() {
 		// 完全にお試し用のものなので後で考えなおす
 		std::vector<enn::individual> new_population;
 		new_population.push_back(parents[0]);
+		std::cout << new_population[0].calculate({0.5, 0.6, 0.7})[0] << std::endl;
 		new_population[0].update(nodes, matrix);
+		std::cout << new_population[0].calculate({0.5, 0.6, 0.7})[0] << std::endl;
 		new_population.push_back(parents[0]);
 		new_population.push_back(parents[1]);
 
