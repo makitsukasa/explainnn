@@ -47,18 +47,25 @@ void enn::individual::update(
 		// (入力、バイアス、隠れ)ノードから上で選んだのと合うsourceノードをランダムに
 		auto table = get_reachable_node_table(adjacency_matrix_bool, destination_ids);
 		for (unsigned long i = 0; i < this->num_input + 1; i++) {
-			if (!table[i]) return;
+			std::cout << (table[i] ? "*" : "_") << ",";
+			if (!table[i]) continue;
 			source_candidates.push_back(i);
 		}
+		std::cout << std::endl;
 		std::sample(
 			source_candidates.begin(), source_candidates.end(), std::back_inserter(source_ids),
 			num_input, random_engine);
 
 		// 本当はここでupdateできるかどうかみたいなのをチェック
 		// ここじゃないかもしれない
-		break;
+		if (source_ids.size() == num_input) {
+			break;
+		}
+		std::cout << "source_ids.size() is " << source_ids.size() << " < " << num_input
+				  << std::endl;
+		std::cout << "source_candidates.size() is " << source_candidates.size() << std::endl;
 	}
-	update(source_ids, destination_ids, nodes, matrix);
+	this->update(source_ids, destination_ids, nodes, matrix);
 }
 
 std::vector<double> enn::individual::calculate(std::vector<double> input) {
