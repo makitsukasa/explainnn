@@ -80,7 +80,13 @@ void calc_reachablility_matrix(
 
 	// 隣接行列のsource_node行目を舐めて
 	for (unsigned long i = 0; i < adjacency_matrix.size(); i++) {
-		// source_node→iの辺がないなら何もしない
+		// reachablility_matrixの対角要素はtrue
+		if (source_node == i) {
+			reachablility_matrix[source_node][i] = true;
+			continue;
+		}
+
+		// 上記以外でsource_node→iの辺がないなら何もしない
 		if (!adjacency_matrix[source_node][i]) continue;
 
 		// source_node→iの辺があるならばiはsource_nodeから到達可能
