@@ -39,21 +39,21 @@ void enn::individual::update(
 	auto node_order_insertion = vectorlib::concat(source_ids, hidden_ids, destination_ids);
 
 	// 各rowに挿入
-	for (auto &row : adjacency_matrix) {
+	for (auto &row : this->adjacency_matrix) {
 		row.insert(row.begin() + jack, additional_nodes_size, nullptr);
 	}
 	// rowを挿入
 	for (unsigned long i = 0; i < additional_nodes_size; i++) {
-		adjacency_matrix.insert(
-			adjacency_matrix.begin() + jack + i, std::vector<edge *>(new_node_size, nullptr));
+		this->adjacency_matrix.insert(
+			this->adjacency_matrix.begin() + jack + i, std::vector<edge *>(new_node_size, nullptr));
 	}
 
 	// edgeを代入
 	for (unsigned long y = 0; y < matrix.size(); y++) {
 		auto y_new = node_id_order[node_order_insertion[y]];
 		for (unsigned long x = 0; x < matrix[y].size(); x++) {
-			auto x_new                     = node_id_order[node_order_insertion[x]];
-			adjacency_matrix[y_new][x_new] = matrix[y][x];
+			auto x_new                           = node_id_order[node_order_insertion[x]];
+			this->adjacency_matrix[y_new][x_new] = matrix[y][x];
 		}
 	}
 	// *** 一旦node_id_order[source_id]の後ろに挿入 *** ここまで
@@ -73,14 +73,14 @@ void enn::individual::update(
 	auto new_node_id_order = vectorlib::inverse(node_order);
 	// matrixを更新
 	std::vector<std::vector<edge *>> new_adjacency_matrix(
-		adjacency_matrix.size(), std::vector<edge *>(adjacency_matrix.size()));
+		this->adjacency_matrix.size(), std::vector<edge *>(this->adjacency_matrix.size()));
 	for (unsigned long x = 0; x < this->nodes.size(); x++) {
 		for (unsigned long y = 0; y < this->nodes.size(); y++) {
 			auto x_new                         = new_node_id_order[old_node_order[x]];
 			auto y_new                         = new_node_id_order[old_node_order[y]];
-			new_adjacency_matrix[y_new][x_new] = adjacency_matrix[y][x];
+			new_adjacency_matrix[y_new][x_new] = this->adjacency_matrix[y][x];
 		}
 	}
-	adjacency_matrix = new_adjacency_matrix;
+	this->adjacency_matrix = new_adjacency_matrix;
 	// *** ソート *** ここまで
 }
