@@ -1,5 +1,4 @@
 #include "lib/graphlib.h"
-#include "enn/edge.h"
 #include <gtest/gtest.h>
 
 TEST(graphlib_tester, two_as_is) {
