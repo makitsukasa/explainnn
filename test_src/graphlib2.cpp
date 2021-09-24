@@ -14,8 +14,8 @@ TEST(graphlib_tester, get_reachable_node_table) {
 		{false, false, false, false, true, true, false, false, false},
 	};
 
-	std::vector<bool> expected = {false, false, true, true, true, true, true, false, true};
 	std::vector<unsigned long> source_node_ids = {2};
+	std::vector<bool> expected = {false, false, true, true, true, true, true, false, true};
 
 	auto actual = get_reachable_node_table(adjacency_matrix, source_node_ids);
 
