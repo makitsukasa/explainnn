@@ -18,7 +18,7 @@ int main() {
 	matrix[1][2] = new enn::edge(0.1);
 
 	const auto num_input       = 3;
-	const auto num_output      = 1;
+	const auto num_output      = 2;
 	const auto population_size = 3;
 	const auto num_generation  = 1;
 
