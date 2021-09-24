@@ -8,6 +8,10 @@
 void enn::individual::update(
 	std::vector<unsigned long> source_ids, std::vector<unsigned long> destination_ids,
 	std::unordered_map<unsigned long, node> nodes, std::vector<std::vector<edge *>> matrix) {
+	// std::cout << source_ids.size() << destination_ids.size() << nodes.size() << matrix.size()
+	// 		  << std::endl;
+	// std::cout << source_ids.size() + destination_ids.size() << ">" << nodes.size() << std::endl;
+	// std::cout << source_ids.size() + destination_ids.size() << "<" << matrix.size() << std::endl;
 	if (source_ids.size() + destination_ids.size() > nodes.size() ||
 		source_ids.size() + destination_ids.size() > matrix.size()) {
 		throw std::runtime_error(
@@ -15,14 +19,14 @@ void enn::individual::update(
 	}
 	auto node_id_order = vectorlib::inverse(node_order);
 
-	std::cout << "node_id_order:";
-	std::copy(
-		node_id_order.begin(), node_id_order.end(), std::ostream_iterator<int>(std::cout, ","));
-	std::cout << std::endl;
+	// std::cout << "node_id_order:";
+	// std::copy(
+	// 	node_id_order.begin(), node_id_order.end(), std::ostream_iterator<int>(std::cout, ","));
+	// std::cout << std::endl;
 
-	std::cout << "source_ids:";
-	std::copy(source_ids.begin(), source_ids.end(), std::ostream_iterator<int>(std::cout, ","));
-	std::cout << std::endl;
+	// std::cout << "source_ids:";
+	// std::copy(source_ids.begin(), source_ids.end(), std::ostream_iterator<int>(std::cout, ","));
+	// std::cout << std::endl;
 
 	auto jack                  = std::max(node_id_order[source_ids.back()] + 1, num_input + 1);
 	auto additional_nodes_size = nodes.size() - source_ids.size() - destination_ids.size();
