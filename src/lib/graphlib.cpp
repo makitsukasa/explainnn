@@ -80,13 +80,7 @@ void calc_reachablility_matrix(
 
 	// 隣接行列のsource_node行目を舐めて
 	for (unsigned long i = 0; i < adjacency_matrix.size(); i++) {
-		// reachablility_matrixの対角要素はtrue
-		if (source_node == i) {
-			reachablility_matrix[source_node][i] = true;
-			continue;
-		}
-
-		// 上記以外でsource_node→iの辺がないなら何もしない
+		// source_node→iの辺がないなら何もしない
 		if (!adjacency_matrix[source_node][i]) continue;
 
 		// source_node→iの辺があるならばiはsource_nodeから到達可能
@@ -116,17 +110,25 @@ std::vector<std::vector<bool>> calc_reachablility_matrix(
 	return reachablility_matrix;
 }
 
-// ノードidが到達不可能かどうかを返す
+// ノードidが到達可能かどうかを返す
+// ここでは(calc_reachablility_matrix()とは違って)source_node_idsに含まれるノードは到達可能とする
 std::vector<bool> get_reachable_node_table(
 	std::vector<std::vector<bool>> adjacency_matrix, std::vector<unsigned long> source_node_ids) {
-
 	std::vector<bool> reachable_node_table(adjacency_matrix.size(), false);
 	auto reachablility_matrix = calc_reachablility_matrix(adjacency_matrix, source_node_ids);
+
+	// reachability_matrixの列ごとの論理和
 	for (unsigned long y = 0; y < reachablility_matrix.size(); y++) {
 		for (unsigned long x = 0; x < reachablility_matrix.size(); x++) {
-			reachable_node_table[x] =
-				reachable_node_table[x] || reachablility_matrix[y][x] ? true : false;
+			reachable_node_table[x] = reachable_node_table[x] || reachablility_matrix[y][x];
 		}
+	}
+
+	// source_node_idsに含まれるノードは到達可能とする
+	for (unsigned long x = 0; x < reachablility_matrix.size(); x++) {
+		reachable_node_table[x] =
+			reachable_node_table[x] ||
+			std::find(source_node_ids.begin(), source_node_ids.end(), x) != source_node_ids.end();
 	}
 	return reachable_node_table;
 }
