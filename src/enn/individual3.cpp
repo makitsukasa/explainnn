@@ -8,8 +8,8 @@
 
 void enn::individual::update(
 	std::unordered_map<unsigned long, node> nodes, std::vector<std::vector<edge *>> matrix) {
-	auto num_source      = 0;
-	auto num_destination = 0;
+	unsigned long num_source      = 0;
+	unsigned long num_destination = 0;
 	for (auto pair : nodes) {
 		switch (pair.second.get_type()) {
 		case node_type::Input:
@@ -33,37 +33,39 @@ void enn::individual::update(
 		// (隠れ、出力)ノードからdestinationノードをランダムに
 		std::sample(
 			destination_candidates.begin(), destination_candidates.end(),
-			std::back_inserter(destination_ids), num_input, random_engine);
+			std::back_inserter(destination_ids), num_destination, random_engine);
 
-		// destinationノードより下流はsourceノードにならない
+		// (入力、バイアス、隠れ)ノードから上で選んだのと合うsourceノードをランダムに
+		// bool型にした隣接行列を用意
 		std::vector<std::vector<bool>> adjacency_matrix_bool(
 			adjacency_matrix.size(), std::vector<bool>(adjacency_matrix.size()));
-		for (unsigned long x = 0; x < adjacency_matrix.size(); x++) {
-			for (unsigned long y = 0; y < adjacency_matrix.size(); y++) {
+		for (unsigned long y = 0; y < adjacency_matrix.size(); y++) {
+			for (unsigned long x = 0; x < adjacency_matrix.size(); x++) {
 				adjacency_matrix_bool[y][x] = adjacency_matrix[y][x] ? true : false;
 			}
 		}
-
-		// (入力、バイアス、隠れ)ノードから上で選んだのと合うsourceノードをランダムに
+		// destinationから到達可能(=destinationより下流)のノードはsourceになり得ない
 		auto table = get_reachable_node_table(adjacency_matrix_bool, destination_ids);
-		for (unsigned long i = 0; i < this->num_input + 1; i++) {
-			std::cout << (table[i] ? "*" : "_") << ",";
-			if (!table[i]) continue;
+		for (unsigned long i = 0; i < this->nodes.size() - this->num_output; i++) {
+			// std::cout << (table[i] ? "*" : "_") << ",";
+			if (table[i]) continue; // 到達可能なら弾く
 			source_candidates.push_back(i);
 		}
-		std::cout << std::endl;
+		// std::cout << std::endl;
+
 		std::sample(
 			source_candidates.begin(), source_candidates.end(), std::back_inserter(source_ids),
-			num_input, random_engine);
+			num_source, random_engine);
+
+		// std::cout << "source_ids.size() is " << source_ids.size() << ", num_source is "
+		// 		  << num_source << std::endl;
+		// std::cout << "source_candidates.size() is " << source_candidates.size() << std::endl;
 
 		// 本当はここでupdateできるかどうかみたいなのをチェック
 		// ここじゃないかもしれない
-		if (source_ids.size() == num_input) {
+		if (source_ids.size() == num_source) {
 			break;
 		}
-		std::cout << "source_ids.size() is " << source_ids.size() << " < " << num_input
-				  << std::endl;
-		std::cout << "source_candidates.size() is " << source_candidates.size() << std::endl;
 	}
 	this->update(source_ids, destination_ids, nodes, matrix);
 }
