@@ -54,9 +54,11 @@ int main() {
 		// 完全にお試し用のものなので後で考えなおす
 		std::vector<enn::individual> new_population;
 		new_population.push_back(parents[0]);
-		std::cout << new_population[0].calculate({0.5, 0.6, 0.7})[0] << std::endl;
+		auto output_before = new_population[0].calculate({0.5, 0.6, 0.7});
+		std::cout << output_before[0] << output_before[1] << std::endl;
 		new_population[0].update(nodes, matrix);
-		std::cout << new_population[0].calculate({0.5, 0.6, 0.7})[0] << std::endl;
+		auto output_after = new_population[0].calculate({0.5, 0.6, 0.7});
+		std::cout << output_after[0] << output_after[1] << std::endl;
 		new_population.push_back(parents[0]);
 		new_population.push_back(parents[1]);
 
