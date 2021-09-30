@@ -1,5 +1,5 @@
 #include "enn/individual.h"
-#include "lib/toposort.h"
+#include "lib/graphlib.h"
 #include "lib/vectorlib.h"
 #include <algorithm>
 #include <iomanip>
@@ -8,12 +8,26 @@
 void enn::individual::update(
 	std::vector<unsigned long> source_ids, std::vector<unsigned long> destination_ids,
 	std::unordered_map<unsigned long, node> nodes, std::vector<std::vector<edge *>> matrix) {
+	// std::cout << source_ids.size() << destination_ids.size() << nodes.size() << matrix.size()
+	// 		  << std::endl;
+	// std::cout << source_ids.size() + destination_ids.size() << ">" << nodes.size() << std::endl;
+	// std::cout << source_ids.size() + destination_ids.size() << "<" << matrix.size() << std::endl;
 	if (source_ids.size() + destination_ids.size() > nodes.size() ||
 		source_ids.size() + destination_ids.size() > matrix.size()) {
 		throw std::runtime_error(
-			"size of each arguments are inappropriate in individual::insert()");
+			"size of each arguments are inappropriate in individual::update()");
 	}
-	auto node_id_order         = vectorlib::inverse(node_order);
+	auto node_id_order = vectorlib::inverse(node_order);
+
+	// std::cout << "node_id_order:";
+	// std::copy(
+	// 	node_id_order.begin(), node_id_order.end(), std::ostream_iterator<int>(std::cout, ","));
+	// std::cout << std::endl;
+
+	// std::cout << "source_ids:";
+	// std::copy(source_ids.begin(), source_ids.end(), std::ostream_iterator<int>(std::cout, ","));
+	// std::cout << std::endl;
+
 	auto jack                  = std::max(node_id_order[source_ids.back()] + 1, num_input + 1);
 	auto additional_nodes_size = nodes.size() - source_ids.size() - destination_ids.size();
 	auto new_node_size         = this->nodes.size() + additional_nodes_size;
@@ -29,21 +43,21 @@ void enn::individual::update(
 	auto node_order_insertion = vectorlib::concat(source_ids, hidden_ids, destination_ids);
 
 	// 各rowに挿入
-	for (auto &row : adjacency_matrix) {
+	for (auto &row : this->adjacency_matrix) {
 		row.insert(row.begin() + jack, additional_nodes_size, nullptr);
 	}
 	// rowを挿入
 	for (unsigned long i = 0; i < additional_nodes_size; i++) {
-		adjacency_matrix.insert(
-			adjacency_matrix.begin() + jack + i, std::vector<edge *>(new_node_size, nullptr));
+		this->adjacency_matrix.insert(
+			this->adjacency_matrix.begin() + jack + i, std::vector<edge *>(new_node_size, nullptr));
 	}
 
 	// edgeを代入
 	for (unsigned long y = 0; y < matrix.size(); y++) {
 		auto y_new = node_id_order[node_order_insertion[y]];
 		for (unsigned long x = 0; x < matrix[y].size(); x++) {
-			auto x_new                     = node_id_order[node_order_insertion[x]];
-			adjacency_matrix[y_new][x_new] = matrix[y][x];
+			auto x_new                           = node_id_order[node_order_insertion[x]];
+			this->adjacency_matrix[y_new][x_new] = matrix[y][x];
 		}
 	}
 	// *** 一旦node_id_order[source_id]の後ろに挿入 *** ここまで
@@ -63,14 +77,14 @@ void enn::individual::update(
 	auto new_node_id_order = vectorlib::inverse(node_order);
 	// matrixを更新
 	std::vector<std::vector<edge *>> new_adjacency_matrix(
-		adjacency_matrix.size(), std::vector<edge *>(adjacency_matrix.size()));
+		this->adjacency_matrix.size(), std::vector<edge *>(this->adjacency_matrix.size()));
 	for (unsigned long x = 0; x < this->nodes.size(); x++) {
 		for (unsigned long y = 0; y < this->nodes.size(); y++) {
 			auto x_new                         = new_node_id_order[old_node_order[x]];
 			auto y_new                         = new_node_id_order[old_node_order[y]];
-			new_adjacency_matrix[y_new][x_new] = adjacency_matrix[y][x];
+			new_adjacency_matrix[y_new][x_new] = this->adjacency_matrix[y][x];
 		}
 	}
-	adjacency_matrix = new_adjacency_matrix;
+	this->adjacency_matrix = new_adjacency_matrix;
 	// *** ソート *** ここまで
 }
