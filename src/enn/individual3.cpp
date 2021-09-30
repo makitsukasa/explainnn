@@ -6,6 +6,7 @@
 #include <iomanip>
 #include <iostream>
 
+// ランダムな位置に挿入
 void enn::individual::update(
 	std::unordered_map<unsigned long, node> nodes, std::vector<std::vector<edge *>> matrix) {
 	unsigned long num_source      = 0;
@@ -47,19 +48,13 @@ void enn::individual::update(
 		// destinationから到達可能(=destinationより下流)のノードはsourceになり得ない
 		auto table = get_reachable_node_table(adjacency_matrix_bool, destination_ids);
 		for (unsigned long i = 0; i < this->nodes.size() - this->num_output; i++) {
-			// std::cout << (table[i] ? "*" : "_") << ",";
 			if (table[i]) continue; // 到達可能なら弾く
 			source_candidates.push_back(i);
 		}
-		// std::cout << std::endl;
 
 		std::sample(
 			source_candidates.begin(), source_candidates.end(), std::back_inserter(source_ids),
 			num_source, random_engine);
-
-		// std::cout << "source_ids.size() is " << source_ids.size() << ", num_source is "
-		// 		  << num_source << std::endl;
-		// std::cout << "source_candidates.size() is " << source_candidates.size() << std::endl;
 
 		// 本当はここでupdateできるかどうかみたいなのをチェック
 		// ここじゃないかもしれない
