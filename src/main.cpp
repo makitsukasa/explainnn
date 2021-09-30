@@ -55,10 +55,10 @@ int main() {
 		std::vector<enn::individual> new_population;
 		new_population.push_back(parents[0]);
 		auto output_before = new_population[0].calculate({0.5, 0.6, 0.7});
-		std::cout << output_before[0] << output_before[1] << std::endl;
+		std::cout << output_before[0] << "," << output_before[1] << std::endl;
 		new_population[0].update(nodes, matrix);
 		auto output_after = new_population[0].calculate({0.5, 0.6, 0.7});
-		std::cout << output_after[0] << output_after[1] << std::endl;
+		std::cout << output_after[0] << "," << output_after[1] << std::endl;
 		new_population.push_back(parents[0]);
 		new_population.push_back(parents[1]);
 
