@@ -6,24 +6,24 @@
 # https://next49.hatenadiary.jp/entry/20120821/p1
 ###
 
+###
+# コンパイラ以外の設定
+###
 ifeq ($(OS),Windows_NT)
-	# MinGW
-	# ECHO = :
-
-	# general
-	ECHO = echo
+	CYGWIN = :
+endif
+# make NOECHO=t
+ifdef NOECHO
+	ECHO = :
 else
 	ECHO = echo
 endif
+.DEFAULT_GOAL := run
 
 ###
 # コンパイラ設定
 ###
-ifeq ($(OS),Windows_NT)
-	# cygwin
-	# CXX = /bin/g++.exe
-
-	# general
+ifdef CYGWIN
 	CXX = g++
 	CXXSTD = -std=gnu++20
 else
@@ -77,11 +77,6 @@ TSOURCEDIR    = ./test_src
 TARGETMAINSRC = main.cpp
 
 ###
-# 他設定
-###
-.DEFAULT_GOAL := run
-
-###
 # 処理部
 ###
 # 1. サブディレクトリを含むディレクトリリストの生成
@@ -94,18 +89,14 @@ TSRCLIST    = $(foreach testsrcdir, $(TSRCDIRLIST), $(wildcard $(testsrcdir)/*.c
 CUTSRCLIST  = $(subst $(SOURCEDIR),.,$(SRCLIST))
 CUTTSRCLIST = $(subst $(TSOURCEDIR),.,$(TSRCLIST))
 # 4. オブジェクトファイル名の決定
-ROBJLIST    = $(addprefix $(ROBJECTDIR)/, $(CUTSRCLIST:.cpp=.o))
-DOBJLIST    = $(addprefix $(DOBJECTDIR)/, $(CUTSRCLIST:.cpp=.o))
-TOBJLIST    = $(addprefix $(TOBJECTDIR)/, $(CUTTSRCLIST:.cpp=.o))
+ROBJLIST = $(subst /./,/,$(addprefix $(ROBJECTDIR)/, $(CUTSRCLIST:.cpp=.o)))
+DOBJLIST = $(subst /./,/,$(addprefix $(DOBJECTDIR)/, $(CUTSRCLIST:.cpp=.o)))
+TOBJLIST = $(subst /./,/,$(addprefix $(TOBJECTDIR)/, $(CUTTSRCLIST:.cpp=.o)))
 # 5. テスト用にmainを含むファイルの除外
 TEMPSRCLIST = $(filter-out %$(TARGETMAINSRC), $(CUTSRCLIST))
 TMODULELIST = $(addprefix $(DOBJECTDIR)/, $(TEMPSRCLIST:.cpp=.o))
-# 6. ディレクトリ構造のリスト化
-ROBJDIRLIST = $(addprefix $(ROBJECTDIR)/, $(SRCDIRLIST))
-DOBJDIRLIST = $(addprefix $(DOBJECTDIR)/, $(SRCDIRLIST))
-TOBJDIRLIST = $(addprefix $(TOBJECTDIR)/, $(TSRCDIRLIST))
 
-# 7. 各種ビルドターゲット設定
+# 6. 各種ビルドターゲット設定
 .PHONY: all build run clean debugbuild debugclean testbuild testclean testrun testlog allbuild allclean
 all: allclean allbuild
 
@@ -147,7 +138,7 @@ allbuild: build debugbuild testbuild
 
 allclean: clean debugclean testclean
 
-# 8. ターゲット実行ファイルの生成
+# 7. ターゲット実行ファイルの生成
 $(RTARGET): $(ROBJLIST)
 	@$(ECHO) \(makefile\) compile $(RTARGETDIR)/$(RTARGET)
 	@if [ ! -e $(RTARGETDIR) ]; then mkdir -p $(RTARGETDIR); fi
@@ -163,7 +154,7 @@ $(TTARGET): $(TOBJLIST)
 	@if [ ! -e $(TTARGETDIR) ]; then mkdir -p $(TTARGETDIR); fi
 	@$(CXX) -o $(TTARGETDIR)/$@ $^ $(TMODULELIST) $(TLDFLAGS) $(TLIBS)
 
-# 9. 中間バイナリの生成
+# 8. 中間バイナリの生成
 $(ROBJECTDIR)/%.o: $(SOURCEDIR)/%.cpp
 	@$(ECHO) \(makefile\) compile $@
 	@if [ ! -e `dirname $@` ]; then mkdir -p `dirname $@`; fi
