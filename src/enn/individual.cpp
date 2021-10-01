@@ -60,16 +60,16 @@ void enn::individual::add_node(
 
 	// 明らかに不適な操作は弾く
 	if (source_id == destination_id) {
-		throw "source_id == destination_id in individual::add_node()";
+		throw std::runtime_error("source_id == destination_id in individual::add_node()");
 	}
 	if (nodes[source_id].get_type() == node_type::Output) {
-		throw "nodes[source_id] is output node in individual::add_node()";
+		throw std::runtime_error("nodes[source_id] is output node in individual::add_node()");
 	}
 	if (nodes[destination_id].get_type() == node_type::Input) {
-		throw "nodes[destination_id] is input node in individual::add_node()";
+		throw std::runtime_error("nodes[destination_id] is input node in individual::add_node()");
 	}
 	if (nodes[destination_id].get_type() == node_type::Bias) {
-		throw "nodes[destination_id] is bias node in individual::add_node()";
+		throw std::runtime_error("nodes[destination_id] is bias node in individual::add_node()");
 	}
 
 	// *** 一旦node_id_order[source_id]の後ろに挿入 *** ここから
@@ -89,8 +89,8 @@ void enn::individual::add_node(
 		std::vector<edge *>(new_size, nullptr));
 
 	// edgeを代入
-	adjacency_matrix[node_id_order[source_id]][node_id_order[new_node_id]]      = edge1;
-	adjacency_matrix[node_id_order[new_node_id]][node_id_order[destination_id]] = edge2;
+	adjacency_matrix[node_id_order[source_id]][node_id_order[new_node_id]]      = new edge(*edge1);
+	adjacency_matrix[node_id_order[new_node_id]][node_id_order[destination_id]] = new edge(*edge2);
 
 	// *** 一旦node_id_order[source_id]の後ろに挿入 *** ここまで
 
@@ -126,5 +126,5 @@ void enn::individual::add_node(
 }
 
 void enn::individual::add_edge(unsigned long source_id, unsigned long destination_id, edge *edge) {
-	adjacency_matrix[source_id][destination_id] = edge;
+	adjacency_matrix[source_id][destination_id] = new enn::edge(*edge);
 }
