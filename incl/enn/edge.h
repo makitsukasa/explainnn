@@ -15,6 +15,7 @@ private:
 public:
 	edge();
 	edge(double weight);
+	edge(edge &obj);
 	friend std::ostream &operator<<(std::ostream &os, const edge &edge);
 	double calculate(double input);
 	double calculateWithSharedWeight(double input);
