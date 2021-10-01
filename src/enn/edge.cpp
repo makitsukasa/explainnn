@@ -9,6 +9,8 @@ enn::edge::edge() {
 
 enn::edge::edge(double weight) : weight(weight) {}
 
+enn::edge::edge(edge &obj) : weight(obj.weight), enabled(obj.enabled) {}
+
 double enn::edge::calculate(double input) {
 	return input * weight;
 }
