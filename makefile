@@ -30,29 +30,29 @@ else
 	CXX = /usr/bin/g++
 	CXXSTD = -std=c++20
 endif
-CXXFLAGS   = $(CXXSTD) -Werror -Wall -Wextra -Wfloat-equal -Winit-self -Wno-missing-field-initializers -Wuninitialized
-LDFLAGS    =
-LIBS       = -lpthread
-INCLUDES   = -I./incl
-RCXXFLAGS  = $(CXXFLAGS) -O3
-RLDFLAGS   = $(LDFLAGS)
-RLIBS      = $(LIBS)
-RINCLUDES  = $(INCLUDES)
-DCXXFLAGS  = $(CXXFLAGS) -O0 -g
-DLDFLAGS   = $(LDFLAGS)
-DLIBS      = $(LIBS)
-DINCLUDES  = $(INCLUDES)
-TCXXFLAGS  = $(CXXFLAGS)
-TLDFLAGS   = $(LDFLAGS)
-TLIBS      = $(LIBS) /usr/local/lib/libgtest.a /usr/local/lib/libgtest_main.a
-TINCLUDES  = $(INCLUDES)
+CXXFLAGS  = $(CXXSTD) -Werror -Wall -Wextra -Wfloat-equal -Winit-self -Wno-missing-field-initializers -Wuninitialized
+LDFLAGS   =
+LIBS      = -lpthread
+INCLUDES  = -I./incl
+RCXXFLAGS = $(CXXFLAGS) -O3
+RLDFLAGS  = $(LDFLAGS)
+RLIBS     = $(LIBS)
+RINCLUDES = $(INCLUDES)
+DCXXFLAGS = $(CXXFLAGS) -O0 -g
+DLDFLAGS  = $(LDFLAGS)
+DLIBS     = $(LIBS)
+DINCLUDES = $(INCLUDES)
+TCXXFLAGS = $(CXXFLAGS)
+TLDFLAGS  = $(LDFLAGS)
+TLIBS     = $(LIBS) /usr/local/lib/libgtest.a /usr/local/lib/libgtest_main.a
+TINCLUDES = $(INCLUDES)
 
 ###
 # 実行ファイル名
 ###
-RTARGET   = explainnn
-DTARGET   = debug_explainnn
-TTARGET   = test_explainnn
+RTARGET = explainnn
+DTARGET = debug_explainnn
+TTARGET = test_explainnn
 
 ###
 # ディレクトリ指定
@@ -68,8 +68,8 @@ TLOGDIR    = ./test_log
 ###
 # ソースコードディレクトリ指定
 ###
-SOURCEDIR     = ./src
-TSOURCEDIR    = ./test_src
+SOURCEDIR  = ./src
+TSOURCEDIR = ./test_src
 
 ###
 # テスト用除外ソース指定
@@ -83,18 +83,18 @@ TARGETMAINSRC = main.cpp
 SRCDIRLIST  := $(shell find $(SOURCEDIR) -type d)
 TSRCDIRLIST := $(shell find $(TSOURCEDIR) -type d)
 # 2. 全てのcppファイルのリストの生成
-SRCLIST     = $(foreach srcdir, $(SRCDIRLIST), $(wildcard $(srcdir)/*.cpp))
-TSRCLIST    = $(foreach testsrcdir, $(TSRCDIRLIST), $(wildcard $(testsrcdir)/*.cpp))
+SRCLIST      = $(foreach srcdir, $(SRCDIRLIST), $(wildcard $(srcdir)/*.cpp))
+TSRCLIST     = $(foreach testsrcdir, $(TSRCDIRLIST), $(wildcard $(testsrcdir)/*.cpp))
 # 3. トリミング
-CUTSRCLIST  = $(subst $(SOURCEDIR),.,$(SRCLIST))
-CUTTSRCLIST = $(subst $(TSOURCEDIR),.,$(TSRCLIST))
+CUTSRCLIST   = $(subst $(SOURCEDIR),.,$(SRCLIST))
+CUTTSRCLIST  = $(subst $(TSOURCEDIR),.,$(TSRCLIST))
 # 4. オブジェクトファイル名の決定
-ROBJLIST = $(subst /./,/,$(addprefix $(ROBJECTDIR)/, $(CUTSRCLIST:.cpp=.o)))
-DOBJLIST = $(subst /./,/,$(addprefix $(DOBJECTDIR)/, $(CUTSRCLIST:.cpp=.o)))
-TOBJLIST = $(subst /./,/,$(addprefix $(TOBJECTDIR)/, $(CUTTSRCLIST:.cpp=.o)))
+ROBJLIST     = $(subst /./,/,$(addprefix $(ROBJECTDIR)/, $(CUTSRCLIST:.cpp=.o)))
+DOBJLIST     = $(subst /./,/,$(addprefix $(DOBJECTDIR)/, $(CUTSRCLIST:.cpp=.o)))
+TOBJLIST     = $(subst /./,/,$(addprefix $(TOBJECTDIR)/, $(CUTTSRCLIST:.cpp=.o)))
 # 5. テスト用にmainを含むファイルの除外
-TEMPSRCLIST = $(filter-out %$(TARGETMAINSRC), $(CUTSRCLIST))
-TMODULELIST = $(addprefix $(DOBJECTDIR)/, $(TEMPSRCLIST:.cpp=.o))
+TEMPSRCLIST  = $(filter-out %$(TARGETMAINSRC), $(CUTSRCLIST))
+TMODULELIST  = $(addprefix $(DOBJECTDIR)/, $(TEMPSRCLIST:.cpp=.o))
 
 # 6. 各種ビルドターゲット設定
 .PHONY: all build run clean debugbuild debugclean testbuild testclean testrun testlog allbuild allclean
